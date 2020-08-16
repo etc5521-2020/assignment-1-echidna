@@ -19,7 +19,7 @@ output:
 
 # Data description
 
-The board games data is obtained from the Board Game Geek database. (https://boardgamegeek.com/) The dataset consists of xx rows and xx columns, which there are 22 variables and 10,532 observations.
+The board games data is obtained from the Board Game Geek database. (https://boardgamegeek.com/) The dataset consists of 10532 rows and 22 columns, which there are 22 variables and 10,532 observations.
 
 The variables included in the data are as follows:
 - game_id: ID of a particular game
