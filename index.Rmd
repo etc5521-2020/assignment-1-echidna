@@ -19,6 +19,31 @@ output:
 
 # Data description
 
+The board games data is obtained from the Board Game Geek database. (https://boardgamegeek.com/) The dataset consists of xx rows and xx columns, which there are 22 variables and 10,532 observations.
+
+The variables included in the data are as follows:
+- game_id: ID of a particular game
+- description: Game description
+- image: URL image of the game
+- max_players/min_player: maximum/minimum number of recommended players
+- max_playtime/min_playtime: maximum/minimum recommended playtime
+- min_age: recommended minimum player age
+- name: name of the game
+- playing_time: average playtime of a game
+- thumbnail: URL thumbnail of the game
+- year_published: year the game was published
+- artist: artist for game art
+- category: categories of the game
+- compilation: name of compilation
+- designer: game designer
+- expansion: name of expansion pack (if any)
+- family: family of game - equivalent to a publisher
+- mechanic: how game is played
+- average_rating: averating rating from 1 to 10 on the website(Board Games Geek)
+- users_rated: number of users rated the game
+
+This data set is cleaned by Thomas Mock, to ensure the reliability of the board game ratings, the data are limited to games with at least 50 ratings and for games between 1950 and 2016.
+
 # Analysis and findings
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
