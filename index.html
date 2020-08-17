@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2020-08-16" />
+<meta name="date" content="2020-08-17" />
 
 <title>ETC5521 Assignment 1</title>
 
@@ -365,7 +365,7 @@ summary {
 <h1 class="title toc-ignore">ETC5521 Assignment 1</h1>
 <h4 class="author">Ruimin Lin</h4>
 <h4 class="author">Rahul Bharadwaj</h4>
-<h4 class="date">2020-08-16</h4>
+<h4 class="date">2020-08-17</h4>
 
 </div>
 
@@ -373,7 +373,10 @@ summary {
 <p><span style="color:#006DAE;">This assignment is for ETC5521 Assignment 1 by Team Echidna comprising of Ruimin Lin and Rahul Bharadwaj.</span></p>
 <div id="introduction-and-motivation" class="section level2">
 <h2>Introduction and motivation</h2>
-<p>[FILL] Give the bigger picture of the data, and inspire the reader to learn more about the problem by reading your analysis.</p>
+<ul>
+<li><strong>What are the common characteristics of top ranked board games in each category and which is the best category of games in terms of average rating?</strong></li>
+</ul>
+<p>The dataset contains multiple columns that consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more! The aim of this exploratory analysis is to find out what factor affect the average rating of games in each category and finally find the best category in terms of rating. This would give insights as to what games are most popular in each category and also about which category is most popular.</p>
 </div>
 <div id="data-description" class="section level2">
 <h2>Data description</h2>
@@ -402,7 +405,10 @@ summary {
 ## $ publisher      &lt;chr&gt; &quot;Hans im Glück Verlags-GmbH,Moskito Spiele,Valley Ga...
 ## $ average_rating &lt;dbl&gt; 7.66508, 6.60815, 7.44119, 6.60675, 7.35830, 6.52534...
 ## $ users_rated    &lt;dbl&gt; 4498, 478, 12019, 314, 15195, 73, 2751, 186, 1263, 6...</code></pre>
-<p>This data set is cleaned by Thomas Mock. To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016.</p>
+<ul>
+<li><p>This data set is cleaned by Thomas Mock. To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. This still leaves us with 10,532 games!</p></li>
+<li><p>The site’s database has more than 90,000 games, with crowd-sourced ratings. There is also an R package with the fulldataset (bggAnalysis) but it hasn’t been updated in ~2 years.</p></li>
+</ul>
 </div>
 <div id="analysis-and-findings" class="section level2">
 <h2>Analysis and findings</h2>

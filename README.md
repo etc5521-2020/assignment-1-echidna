@@ -1,11 +1,11 @@
 # ETC5521 Assignment 1 
 
-Team name: [FILL]
+Team name: Echidna
 
 Team members:
 
-* [FILL]
-* [FILL]
+* Ruimin Lin
+* Rahul Bharadwaj
 
 # Steps
 

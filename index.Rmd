@@ -23,7 +23,9 @@ library(tidyverse)
 
 ## Introduction and motivation
 
-[FILL] Give the bigger picture of the data, and inspire the reader to learn more about the problem by reading your analysis. 
+* **What are the common characteristics of top ranked board games in each category and which is the best category of games in terms of average rating?**
+
+The dataset contains multiple columns that consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more! The aim of this exploratory analysis is to find out what factor affect the average rating of games in each category and finally find the best category in terms of rating. This would give insights as to what games are most popular in each category and also about which category is most popular.
 
 ## Data description
 
@@ -37,7 +39,9 @@ The board games data is obtained from the [Board Game Geek](https://boardgamegee
 glimpse(board_games)
 ```
 
-This data set is cleaned by Thomas Mock. To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016.
+* This data set is cleaned by Thomas Mock. To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. This still leaves us with 10,532 games!
+
+* The site's database has more than 90,000 games, with crowd-sourced ratings. There is also an R package with the fulldataset (bggAnalysis) but it hasn't been updated in ~2 years.
 
 ## Analysis and findings
 
