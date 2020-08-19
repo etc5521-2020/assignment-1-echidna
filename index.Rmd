@@ -23,7 +23,11 @@ library(tidyverse)
 
 ## Introduction and motivation
 
-Board Games been a long-lasting type of leisure people enjoyed, have went through a couple of revolutions. Board Games enables a way for people to socialize, reducing stress under such a fast-fading society, and allow an extensive brain exercise. Being a popular type of game people enjoying in leisure times, we are curioused about what makes a board game great? In other words, what are the common characteristics of top ranked board games currently and which is the best category of board games in terms of average rating? 
+Board Games been a long-lasting type of leisure people enjoyed, have went through a couple of revolutions. Board Games enables a way for people to socialize, reducing stress under such a fast-fading society, and allow an extensive brain exercise. Being a popular type of game people enjoying in leisure times, we are curioused about what makes a board game great? In other words, what are the common characteristics of top ranked board games currently and the best board games in terms of average rating. 
+
+The original board games data used in this report is obtained from the [Board Game Geek](https://boardgamegeek.com/) database, and is cleaned and shared by [Thomas Mock](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12). 
+
+The tidy dataset consists of `r ncol(board_games)` columns and `r nrow(board_games)` rows, in which there are `r ncol(board_games)` variables and `r nrow(board_games)` observations, that contains multiple columns consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more. One thing to notice is that, eventhough the data set is tidy, we still find observations in variables like `category`, `family`, `mechanic` is too messy and repetitive, which may limit our ability to explore these variables.
 
 ## Data description
 
@@ -43,11 +47,7 @@ Secondary Question:
 board_games <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-12/board_games.csv")
 ```
 
-```{r}
-unique(board_games$category)
-```
-
-The board games data used in this report is obtained from the [Board Game Geek](https://boardgamegeek.com/) database. The dataset consists of `r ncol(board_games)` columns and `r nrow(board_games)` rows, in which there are `r ncol(board_games)` variables and `r nrow(board_games)` observations, that contains multiple columns consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more.The variables included in the data are as follows:
+The variables included in the data are as follows:
 
 ```{r}
 glimpse(board_games)
