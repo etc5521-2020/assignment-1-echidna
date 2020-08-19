@@ -405,7 +405,28 @@ summary {
 ## $ publisher      &lt;chr&gt; &quot;Hans im Glück Verlags-GmbH,Moskito Spiele,Valley Ga...
 ## $ average_rating &lt;dbl&gt; 7.66508, 6.60815, 7.44119, 6.60675, 7.35830, 6.52534...
 ## $ users_rated    &lt;dbl&gt; 4498, 478, 12019, 314, 15195, 73, 2751, 186, 1263, 6...</code></pre>
+<p>The explanation of variables and variable types are provided to enable a better understanding of the variables in board games data set.</p>
 <ul>
+<li><p>game_id: ID of a particular game, the game_id should be a character vector(categorical) instead of a double vector mentioned in the table above.</p></li>
+<li><p>description: Game description, a character vector.</p></li>
+<li><p>image: URL image of the game, a character vector.</p></li>
+<li><p>max_players/min_player: maximum/minimum number of recommended players, double vectors.</p></li>
+<li><p>max_playtime/min_playtime: maximum/minimum recommended playtime, double vectors.</p></li>
+<li><p>min_age: recommended minimum player age, double vectors.</p></li>
+<li><p>name: name of the game, a character vector.</p></li>
+<li><p>playing_time: average playtime of a game, a double vector.</p></li>
+<li><p>thumbnail: URL thumbnail of the game, a character vector.</p></li>
+<li><p>year_published: year the game was published, a double vector.</p></li>
+<li><p>artist: artist for game art, a character vector.</p></li>
+<li><p>category: categories of the game, a character vector.</p></li>
+<li><p>compilation: name of compilation, a character vector.</p></li>
+<li><p>designer: game designer, a character vector.</p></li>
+<li><p>expansion: name of expansion pack (if any), a character vector.</p></li>
+<li><p>family: family of game - equivalent to a publisher, a character vector.</p></li>
+<li><p>mechanic: how game is played, a character vector.</p></li>
+<li><p>publisher: company/person who published the game, a character vector.</p></li>
+<li><p>average_rating: average rating from 1 to 10 on the website(Board Games Geek), a double vector.</p></li>
+<li><p>users_rated: number of users rated the game, a double vector.</p></li>
 <li><p>This data set is cleaned by Thomas Mock. To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. This still leaves us with 10,532 games!</p></li>
 <li><p>The site’s database has more than 90,000 games, with crowd-sourced ratings. There is also an R package with the fulldataset (bggAnalysis) but it hasn’t been updated in ~2 years.</p></li>
 </ul>
