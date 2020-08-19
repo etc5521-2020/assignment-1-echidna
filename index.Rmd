@@ -80,8 +80,11 @@ The explanation of variables and variable types are provided to enable a better 
 
 * users_rated: number of users rated the game, a double vector.
 
-This data set is cleaned by Thomas Mock. To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. This still leaves us with 10,532 games. The site's database has more than 90,000 games, with crowd-sourced ratings. There is also an R package with the fulldataset (bggAnalysis) but it hasn't been updated in ~2 years.
+This data set is cleaned by Thomas Mock, to ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. The site's database has more than 90,000 games, with crowd-sourced ratings.
 
+The original board games data set consists of 90400 observations, and 80 variables. Therefore, data cleaning and wrangling is necessary for data to enable better analysis procedure. Thomas have replaced long and complicate variable names like `details.description` in original data to `description` using `janitor::clean_names` and `set_names` function, which avoids messy code writing. In addition, Thomas have eliminated around 50 variables using function `select`, that leaves 27 variables at this stage.
+
+The data set is then filtered to board games published from 1950 to 2016, with at least 50 users rated. NA values in variable `year_published` is also omitted. Thomas then excludes variables that may not be useful for the analysis, such as `attributes_total`, `game_type` etc., which ultimately, leaves us with a tidy data set (22 variables and 10532 variables) that is relatively concise and convenient for further exploration.
 ## Analysis and findings
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 

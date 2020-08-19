@@ -376,7 +376,7 @@ summary {
 <ul>
 <li><strong>What are the common characteristics of top ranked board games in each category and which is the best category of games in terms of average rating?</strong></li>
 </ul>
-<p>The dataset contains multiple columns that consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more! The aim of this exploratory analysis is to find out what factor affect the average rating of games in each category and finally find the best category in terms of rating. This would give insights as to what games are most popular in each category and also about which category is most popular.</p>
+<p>The dataset contains multiple columns that consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more. The aim of this exploratory analysis is to find out what factor affect the average rating of games in each category and finally find the best category in terms of rating. This would give insights as to what games are most popular in each category and also about which category is most popular.</p>
 </div>
 <div id="data-description" class="section level2">
 <h2>Data description</h2>
@@ -427,12 +427,9 @@ summary {
 <li><p>publisher: company/person who published the game, a character vector.</p></li>
 <li><p>average_rating: average rating from 1 to 10 on the website(Board Games Geek), a double vector.</p></li>
 <li><p>users_rated: number of users rated the game, a double vector.</p></li>
-<li><p>This data set is cleaned by Thomas Mock. To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. This still leaves us with 10,532 games!</p></li>
-<li><p>The site’s database has more than 90,000 games, with crowd-sourced ratings. There is also an R package with the fulldataset (bggAnalysis) but it hasn’t been updated in ~2 years.</p></li>
 </ul>
-</div>
-<div id="analysis-and-findings" class="section level2">
-<h2>Analysis and findings</h2>
+<p>This data set is cleaned by Thomas Mock, to ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. The site’s database has more than 90,000 games, with crowd-sourced ratings.</p>
+<p>The original board games data set consists of 90400 observations, and 80 variables. Therefore, data cleaning and wrangling is necessary for data to enable better analysis procedure. Thomas have replaced long and complicate variable names like <code>details.description</code> in original data to <code>description</code> using <code>janitor::clean_names</code> and <code>set_names</code> function, which avoids messy code writing. The data set is then filtered to board games published from 1950 to 2016, with at least 50 users rated. NA values in variable <code>year_published</code> is also omitted. Thomas then excludes variables that may not be useful for the analysis, such as <code>attributes_total</code>, <code>game_type</code> etc., which ultimately, leaves us with a tidy data set that is relatively concise and convenient for further exploration. ## Analysis and findings</p>
 <p>[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings.</p>
 </div>
 <div id="references" class="section level2">
