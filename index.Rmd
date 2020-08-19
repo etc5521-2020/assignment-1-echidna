@@ -18,6 +18,10 @@ knitr::opts_chunk$set(echo = FALSE,
 library(tidyverse)
 ```
 
+```{r ReadData}
+board_games <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-12/board_games.csv")
+```
+
 [This assignment is for ETC5521 Assignment 1 by Team `r rmarkdown::metadata$team` comprising of `r knitr::combine_words(rmarkdown::metadata$author)`.]{style="color:#006DAE;"}
 
 
@@ -42,10 +46,6 @@ Secondary Question:
 1. What are the top 10 ranked board games?
 2. How do variables like min/max playtime, min/max players, or min_age affect the average rating? (or any interesting findings when examining the data?)
 3. What is the relation between min_age and average_rating of games? Do children play more or adults play more?
-
-```{r ReadData}
-board_games <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-12/board_games.csv")
-```
 
 The variables included in the data are as follows:
 
@@ -105,3 +105,8 @@ The data set is then filtered to board games published from 1950 to 2016, with a
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
 
 ## References
+
+* BoardGameGeek | Gaming Unplugged Since 2000. (2000). BGG. https://boardgamegeek.com/BoardGameGeek
+
+* Thomas Mock, (2019). Tidy Tuesday. https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12
+

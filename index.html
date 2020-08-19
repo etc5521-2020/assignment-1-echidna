@@ -373,14 +373,22 @@ summary {
 <p><span style="color:#006DAE;">This assignment is for ETC5521 Assignment 1 by Team Echidna comprising of Ruimin Lin and Rahul Bharadwaj.</span></p>
 <div id="introduction-and-motivation" class="section level2">
 <h2>Introduction and motivation</h2>
-<ul>
-<li><strong>What are the common characteristics of top ranked board games in each category and which is the best category of games in terms of average rating?</strong></li>
-</ul>
-<p>The dataset contains multiple columns that consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more. The aim of this exploratory analysis is to find out what factor affect the average rating of games in each category and finally find the best category in terms of rating. This would give insights as to what games are most popular in each category and also about which category is most popular.</p>
+<p>Board Games been a long-lasting type of leisure people enjoyed, have went through a couple of revolutions. Board Games enables a way for people to socialize, reducing stress under such a fast-fading society, and allow an extensive brain exercise. Being a popular type of game people enjoying in leisure times, we are curioused about what makes a board game great? In other words, what are the common characteristics of top ranked board games currently and the best board games in terms of average rating.</p>
+<p>The original board games data used in this report is obtained from the <a href="https://boardgamegeek.com/">Board Game Geek</a> database, and is cleaned and shared by <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12">Thomas Mock</a>.</p>
+<p>The tidy dataset consists of 22 columns and 10532 rows, in which there are 22 variables and 10532 observations, that contains multiple columns consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more. One thing to notice is that, eventhough the data set is tidy, we still find observations in variables like <code>category</code>, <code>family</code>, <code>mechanic</code> is too messy and repetitive, which may limit our ability to explore these variables.</p>
 </div>
 <div id="data-description" class="section level2">
 <h2>Data description</h2>
-<p>The board games data is obtained from the <a href="https://boardgamegeek.com/">Board Game Geek</a> database. The dataset consists of 22 columns and 10532 rows, in which there are 22 variables and 10532 observations. The variables included in the data are as follows:</p>
+<p>The aim of this exploratory analysis is to find out what factor affect the average rating of board games. This would give insights as to what board games are most popular and the characteristics these board games share.Therefore, we have articulate following questions to help us with further exploration of the board games data.</p>
+<p>Primary Question:</p>
+<p><strong>What are the common characteristics of top ranked board games?</strong></p>
+<p>Secondary Question:</p>
+<ol style="list-style-type: decimal">
+<li>What are the top 10 ranked board games?</li>
+<li>How do variables like min/max playtime, min/max players, or min_age affect the average rating? (or any interesting findings when examining the data?)</li>
+<li>What is the relation between min_age and average_rating of games? Do children play more or adults play more?</li>
+</ol>
+<p>The variables included in the data are as follows:</p>
 <pre><code>## Rows: 10,532
 ## Columns: 22
 ## $ game_id        &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
@@ -429,11 +437,19 @@ summary {
 <li><p>users_rated: number of users rated the game, a double vector.</p></li>
 </ul>
 <p>This data set is cleaned by Thomas Mock, to ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. The site’s database has more than 90,000 games, with crowd-sourced ratings.</p>
-<p>The original board games data set consists of 90400 observations, and 80 variables. Therefore, data cleaning and wrangling is necessary for data to enable better analysis procedure. Thomas have replaced long and complicate variable names like <code>details.description</code> in original data to <code>description</code> using <code>janitor::clean_names</code> and <code>set_names</code> function, which avoids messy code writing. The data set is then filtered to board games published from 1950 to 2016, with at least 50 users rated. NA values in variable <code>year_published</code> is also omitted. Thomas then excludes variables that may not be useful for the analysis, such as <code>attributes_total</code>, <code>game_type</code> etc., which ultimately, leaves us with a tidy data set that is relatively concise and convenient for further exploration. ## Analysis and findings</p>
+<p>The original board games data set consists of 90400 observations, and 80 variables. Therefore, data cleaning and wrangling is necessary for data to enable better analysis procedure. Thomas have replaced long and complicate variable names like <code>details.description</code> in original data to <code>description</code> using <code>janitor::clean_names</code> and <code>set_names</code> function, which avoids messy code writing. In addition, Thomas have eliminated around 50 variables using function <code>select</code>, that leaves 27 variables at this stage.</p>
+<p>The data set is then filtered to board games published from 1950 to 2016, with at least 50 users rated. NA values in variable <code>year_published</code> is also omitted. Thomas then excludes variables that may not be useful for the analysis, such as <code>attributes_total</code>, <code>game_type</code> etc., which ultimately, leaves us with a tidy data set (22 variables and 10532 variables) that is relatively concise and convenient for further exploration.</p>
+</div>
+<div id="analysis-and-findings" class="section level2">
+<h2>Analysis and findings</h2>
 <p>[FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings.</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
+<ul>
+<li><p>BoardGameGeek | Gaming Unplugged Since 2000. (2000). BGG. <a href="https://boardgamegeek.com/BoardGameGeek" class="uri">https://boardgamegeek.com/BoardGameGeek</a></p></li>
+<li><p>Thomas Mock, (2019). Tidy Tuesday. <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12" class="uri">https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12</a></p></li>
+</ul>
 </div>
 
 
