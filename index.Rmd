@@ -23,17 +23,31 @@ library(tidyverse)
 
 ## Introduction and motivation
 
-* **What are the common characteristics of top ranked board games in each category and which is the best category of games in terms of average rating?**
-
-The dataset contains multiple columns that consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more. The aim of this exploratory analysis is to find out what factor affect the average rating of games in each category and finally find the best category in terms of rating. This would give insights as to what games are most popular in each category and also about which category is most popular.
+Board Games been a long-lasting type of leisure people enjoyed, have went through a couple of revolutions. Board Games enables a way for people to socialize, reducing stress under such a fast-fading society, and allow an extensive brain exercise. Being a popular type of game people enjoying in leisure times, we are curioused about what makes a board game great? In other words, what are the common characteristics of top ranked board games currently and which is the best category of board games in terms of average rating? 
 
 ## Data description
+
+The aim of this exploratory analysis is to find out what factor affect the average rating of board games. This would give insights as to what board games are most popular and the characteristics these board games share.Therefore, we have articulate following questions to help us with further exploration of the board games data.
+
+Primary Question:
+
+**What are the common characteristics of top ranked board games?**
+
+Secondary Question:
+
+1. What are the top 10 ranked board games?
+2. How do variables like min/max playtime, min/max players, or min_age affect the average rating? (or any interesting findings when examining the data?)
+3. What is the relation between min_age and average_rating of games? Do children play more or adults play more?
 
 ```{r ReadData}
 board_games <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-12/board_games.csv")
 ```
 
-The board games data is obtained from the [Board Game Geek](https://boardgamegeek.com/) database. The dataset consists of `r ncol(board_games)` columns and `r nrow(board_games)` rows, in which there are `r ncol(board_games)` variables and `r nrow(board_games)` observations. The variables included in the data are as follows:
+```{r}
+unique(board_games$category)
+```
+
+The board games data used in this report is obtained from the [Board Game Geek](https://boardgamegeek.com/) database. The dataset consists of `r ncol(board_games)` columns and `r nrow(board_games)` rows, in which there are `r ncol(board_games)` variables and `r nrow(board_games)` observations, that contains multiple columns consist of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more.The variables included in the data are as follows:
 
 ```{r}
 glimpse(board_games)
@@ -85,6 +99,7 @@ This data set is cleaned by Thomas Mock, to ensure the reliability of the board 
 The original board games data set consists of 90400 observations, and 80 variables. Therefore, data cleaning and wrangling is necessary for data to enable better analysis procedure. Thomas have replaced long and complicate variable names like `details.description` in original data to `description` using `janitor::clean_names` and `set_names` function, which avoids messy code writing. In addition, Thomas have eliminated around 50 variables using function `select`, that leaves 27 variables at this stage.
 
 The data set is then filtered to board games published from 1950 to 2016, with at least 50 users rated. NA values in variable `year_published` is also omitted. Thomas then excludes variables that may not be useful for the analysis, such as `attributes_total`, `game_type` etc., which ultimately, leaves us with a tidy data set (22 variables and 10532 variables) that is relatively concise and convenient for further exploration.
+
 ## Analysis and findings
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
