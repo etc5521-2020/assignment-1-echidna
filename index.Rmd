@@ -15,7 +15,12 @@ knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       warning = FALSE,
                       fig.align = 'center')
+```
+
+```{r}
 library(tidyverse)
+library(kableExtra)
+library(plotly)
 ```
 
 ```{r ReadData}
@@ -103,6 +108,130 @@ The data set is then filtered to board games published from 1950 to 2016, with a
 ## Analysis and findings
 
 [FILL] Should include at least one plot or numerical summary for each of your questions, that helps the reader arrive at an answer. You should also write paragraphs describing the methods, summaries and findings. 
+
+1. What are the top 10 ranked board games?
+
+```{r}
+Q1 <- board_games %>%
+  arrange(desc(average_rating)) %>%
+  head(10)
+
+Q1 %>%
+  dplyr::select(name, average_rating, max_playtime, 
+                min_playtime, max_players, min_players) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?
+
+- to have a better idea on the common characteristics of top-ranked board games, we have widened the range to top 50.(to ensure the reliability)
+
+```{r}
+board_games_top50 <- board_games %>%
+  dplyr::select(game_id, 
+                max_players, 
+                max_playtime, 
+                min_players, 
+                min_playtime, 
+                min_age, 
+                name,
+                playing_time,
+                year_published,
+                designer,
+                average_rating,
+                users_rated) %>%
+  arrange(desc(average_rating)) %>%
+  head(50)
+```
+
+```{r}
+p1 <- board_games_top50 %>%
+  ggplot(aes(max_playtime, average_rating, colour = name)) +
+  geom_point() +
+  theme(legend.position = "none")
+
+ggplotly(p1)
+```
+In plot 1 we can see that there are a few obvious distinct values present, which are:
+
+* The Greatest Day:Sword, Juno, and Gold Beaches with 6000 minutes max. playtime and an average rating of 8.8308
+
+* Axis Empires: Totaler Krieg! with 3600 minutes max. playtime and average rating of 8.4194
+
+* Beyond the Rhine with 3000 minutes max. playtime and average rating of 8.5979
+
+It is difficult to examine the trend or common characteristics with these outliers presents, therefore, we have limited the maximum playtime to less than xx minutes using the IQR outliers formula. (Q1 - 1.5IQR and Q3 + 1.5 IQR)
+
+```{r}
+summary(board_games_top50$max_playtime)
+
+82.5 - 1.5*(345-82.5)
+345 + 1.5*(345-82.5)
+```
+
+```{r}
+p1a <- board_games_top50 %>%
+  dplyr::filter(max_playtime < 738.75) %>%
+  ggplot(aes(max_playtime, average_rating, colour = name)) +
+  geom_point() +
+  theme(legend.position = "none")
+
+ggplotly(p1a)
+```
+Now we can have a clearer picture of where majority of top-50 ranked board games lie in the graph of average rating against maximum playtime. Where, majority of board games lie within the range of 200 minutes of maximum playtime.
+
+```{r}
+summary(board_games_top50$min_playtime)
+
+45 - 1.5*(180-45)
+180 + 1.5*(180-45)
+```
+```{r}
+p2 <- board_games_top50 %>%
+  dplyr::filter(min_playtime < 382.5) %>%
+  ggplot(aes(min_playtime, average_rating, colour = name)) +
+  geom_point() +
+  theme(legend.position = "none")
+
+ggplotly(p2)
+```
+We have implemented the same method to omit the outliers as done previously, the graph demonstrates that in top-50 ranked board games, most of them have a minimum playtime less than 100 minutes.
+
+```{r}
+p3 <- board_games_top50 %>%
+  ggplot(aes(min_players, average_rating, colour = name)) +
+  geom_point() +
+  theme(legend.position = "none")
+
+ggplotly(p3)
+```
+
+In the scatterplot for average rating against minimum players, we observed that most top 50 board games have at least 2 players.
+
+```{r}
+p4 <- board_games_top50 %>%
+  dplyr::filter(max_players <15) %>%
+  ggplot(aes(max_players, average_rating, colour = name)) +
+  geom_point() +
+  theme(legend.position = "none")
+
+ggplotly(p4)
+```
+
+In the scatterplot for average rating against maximum players, we observed that most top 50 board games have a maximum of 4 or 5 players.
+
+
+```{r}
+p5 <- board_games_top50 %>%
+  ggplot(aes(min_age, average_rating, colour = name)) +
+  geom_point() +
+  theme(legend.position = "none")
+
+ggplotly(p5)
+```
+
+In the scatterplot for average rating against minimum age of players, we observed that the minimum age set by majority of board games are between 10 - 15.
 
 ## References
 
