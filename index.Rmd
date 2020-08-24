@@ -123,21 +123,36 @@ issues.
   + Data screening is the description of the data properties.
   + Documentation and reporting preserve the information for the later statistical analysis and models.
   
-```{r visdatData, fig.cap='Visualization of Data Types', fig.height=3, fig.width=6}
+```{r visdatData, fig.cap='Visualization of Data Types', fig.align = "center", fig.height=3, fig.width=6}
 vis_dat(board_games)
 ```
 
-```{r vismissData, fig.cap='Visualization of Missing Values', fig.height=3, fig.width=6}
+```{r vismissData, fig.cap='Visualization of Missing Values', fig.align = "center", fig.height=3, fig.width=6}
 vis_miss(board_games)
 ```
 
+
+
 1. What are the top 10 ranked board games?
 
-```{r Top10Table}
+```{r Top10barchart, fig.cap='Top 10 ranked board games', fig.align = "center", fig.height=3, fig.width=6}
 Q1 <- board_games %>%
   arrange(desc(average_rating)) %>%
   head(10)
 
+Q1 %>% 
+  ggplot(aes(name, average_rating, fill = name, label = name)) +
+  geom_col() +
+  geom_text(size = 3, angle = 90, position = position_stack(vjust = 0.5)) +
+  theme(axis.text.x = element_blank(),
+        legend.position = "none") +
+  xlab("Board Games") +
+  ylab("Average rating") +
+  ggtitle("Top 10 Ranked Board Games")
+
+```
+
+```{r Top10table}
 Q1 %>%
   dplyr::select(name, average_rating, max_playtime, 
                 min_playtime, max_players, min_players) %>%
@@ -145,9 +160,11 @@ Q1 %>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
+
 2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?
 
 - to have a better idea on the common characteristics of top-ranked board games, we have widened the range to top 50.(to ensure the reliability)
+
 
 ```{r Top50Create}
 board_games_top50 <- board_games %>%
@@ -167,19 +184,23 @@ board_games_top50 <- board_games %>%
   head(50)
 ```
 
-```{r visdatTop50, fig.cap='Visualization of Data Types in Top 50 Games', fig.height=3, fig.width=6}
+```{r visdatTop50, fig.cap='Visualization of Data Types in Top 50 Games', fig.align = "center", fig.height=3, fig.width=6}
 vis_dat(board_games_top50)
 ```
 
-```{r vismissTop50, fig.cap='Visualization of Missing Values in Top 50 Games', fig.height=3, fig.width=6}
+```{r vismissTop50, fig.cap='Visualization of Missing Values in Top 50 Games', fig.align = "center", fig.height=3, fig.width=6}
 vis_miss(board_games_top50)
 ```
+
 
 ```{r MaxPlaytime}
 p1 <- board_games_top50 %>%
   ggplot(aes(max_playtime, average_rating, colour = name)) +
   geom_point() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  xlab("Maximum playtime") +
+  ylab("Average rating") +
+  ggtitle("Relationship between maximum playtime and average rating")
 
 ggplotly(p1)
 ```
@@ -207,15 +228,19 @@ bpmaxplaytime <- board_games_top50 %>%
   geom_hline(yintercept = median(board_games_top50$max_playtime), color='blue')
 ```
 
-```{r MaxPlaytimePlot}
+```{r MaxPlaytimePlot, fig.align = "center", fig.height=3, fig.width=6}
+
 p1a <- board_games_top50 %>%
   dplyr::filter(max_playtime < 738.75) %>%
   ggplot(aes(max_playtime, average_rating, colour = name)) +
-  geom_point() +
+  geom_point(size = 2) +
   theme(legend.position = "none") +
-  geom_vline(xintercept = median(board_games_top50$max_playtime), color='red')
+  geom_vline(xintercept = median(board_games_top50$max_playtime), color='red') +
+  xlab("Maximum playtime adjusted") +
+  ylab("Average rating") +
+  ggtitle("Relationship between maximum playtime and average rating")
 
-ggplotly(p1a)
+p1a
 ```
 Now we can have a clearer picture of where majority of top-50 ranked board games lie in the graph of average rating against maximum playtime. Where, majority of board games lie within the range of 200 minutes of maximum playtime.
 
@@ -232,15 +257,18 @@ bpminplaytime <- board_games_top50 %>% dplyr::filter(min_playtime < 382.5) %>% g
   geom_hline(yintercept = median(board_games_top50$min_playtime), color='blue')
 ```
 
-```{r MinPlaytimePlot}
+```{r MinPlaytimePlot, fig.align = "center", fig.height=3, fig.width=6}
 p2 <- board_games_top50 %>%
   dplyr::filter(min_playtime < 382.5) %>%
   ggplot(aes(min_playtime, average_rating, colour = name)) +
-  geom_point() +
+  geom_point(size = 2) +
   theme(legend.position = "none") +
-  geom_vline(xintercept = median(board_games_top50$min_playtime), color='blue')
+  geom_vline(xintercept = median(board_games_top50$min_playtime), color='blue') +
+  xlab("Minimum playtime") +
+  ylab("Average rating") +
+  ggtitle("Relationship between minimum playtime and average rating")
 
-ggplotly(p2)
+p2
 ```
 We have implemented the same method to omit the outliers as done previously, the graph demonstrates that in top-50 ranked board games, most of them have a minimum playtime less than 100 minutes.
 
@@ -250,14 +278,17 @@ bpminplayers <- board_games_top50 %>% ggplot() +
   geom_hline(yintercept = median(board_games_top50$min_players), color='green')
 ```
 
-```{r MinPlayersPlot}
+```{r MinPlayersPlot, fig.align = "center", fig.height=3, fig.width=6}
 p3 <- board_games_top50 %>%
   ggplot(aes(min_players, average_rating, colour = name)) +
-  geom_point() +
+  geom_point(size = 2) +
   theme(legend.position = "none") +
-  geom_vline(xintercept = median(board_games_top50$min_players), color='green')
+  geom_vline(xintercept = median(board_games_top50$min_players), color='green') +
+  xlab("Minimum players") +
+  ylab("Average rating") +
+  ggtitle("Relationship between minimum players and average rating")
 
-ggplotly(p3)
+p3
 ```
 
 In the scatterplot for average rating against minimum players, we observed that most top 50 board games have at least 2 players.
@@ -268,15 +299,18 @@ bpmaxplayers <- board_games_top50 %>% ggplot() +
   geom_hline(yintercept = median(board_games_top50$max_players), color='green')
 ```
 
-```{r MaxPlayersPlot}
+```{r MaxPlayersPlot, fig.align = "center", fig.height=3, fig.width=6}
 p4 <- board_games_top50 %>%
   dplyr::filter(max_players <15) %>%
   ggplot(aes(max_players, average_rating, colour = name)) +
-  geom_point() +
+  geom_point(size = 2) +
   theme(legend.position = "none") +
-  geom_vline(xintercept = median(board_games_top50$max_players), color='green')
+  geom_vline(xintercept = median(board_games_top50$max_players), color='green')+
+  xlab("Maximum players") +
+  ylab("Average rating") +
+  ggtitle("Relationship between maximum players and average rating")
 
-ggplotly(p4)
+p4
 ```
 
 In the scatterplot for average rating against maximum players, we observed that most top 50 board games have a maximum of 4 or 5 players.
@@ -287,14 +321,17 @@ bpminage <- board_games_top50 %>% ggplot() +
   geom_hline(yintercept = median(board_games_top50$min_age), color='red')
 ```
 
-```{r MinAgePlot}
+```{r MinAgePlot, fig.align = "center", fig.height=3, fig.width=6}
 p5 <- board_games_top50 %>%
   ggplot(aes(min_age, average_rating, colour = name)) +
-  geom_point() +
+  geom_point(size = 2) +
   theme(legend.position = "none") +
-  geom_vline(xintercept = median(board_games_top50$min_age), color='green')
+  geom_vline(xintercept = median(board_games_top50$min_age), color='green')+
+  xlab("Minimum age") +
+  ylab("Average rating") +
+  ggtitle("Relationship between minimum age and average rating")
 
-ggplotly(p5)
+p5
 ```
 
 ```{r BoxplotCompare}
