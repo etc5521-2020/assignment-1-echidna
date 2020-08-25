@@ -24,6 +24,9 @@ library(plotly)
 library(visdat)
 library(gridExtra)
 library(viridis)
+library(broom)
+library(bookdown)
+library(knitr)
 ```
 
 ```{r ReadData}
@@ -170,8 +173,7 @@ Q1 %>%
 
 **2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?**
 
-* To have a better idea on the common characteristics of top-ranked board games, we have widened the range to top 50.(to ensure the reliability)
-
+* To have a better idea on the common characteristics of top-ranked board games and ensuring the reliability of the results, we have widened the range to top 50.
 
 ```{r Top50Create}
 board_games_top50 <- board_games %>%
@@ -220,20 +222,25 @@ ggplotly(p1)
 * It is difficult to examine the trend or common characteristics with these outliers presents, therefore, we have limited the maximum playtime to less than xx minutes using the IQR outliers formula. (Q1 - 1.5IQR and Q3 + 1.5 IQR)
 
 ```{r MaxPlaytimeStat}
-summary(board_games_top50$max_playtime)
+iqr1 <- summary(board_games_top50$max_playtime)
+tidy(iqr1)
+```
+```{r iqr1-outlier}
+lo1 <- 82.5 - 1.5*(345-82.5)
+up1 <- 345 + 1.5*(345-82.5)
 
-82.5 - 1.5*(345-82.5)
-345 + 1.5*(345-82.5)
+tibble(lower_range = lo1,
+       upper_range = up1)
 ```
 
 ```{r BoxPlotMaxPlaytime}
-bpmaxplaytime <- board_games_top50 %>% ggplot() +
+bpmaxplaytime <- board_games_top50 %>% 
+  ggplot() +
   geom_boxplot(mapping = aes(y= max_playtime), fill = "white") +
   geom_hline(yintercept = median(board_games_top50$max_playtime), color='red')
 ```
 
 ```{r MaxPlaytimePlot, fig.align = "center", fig.height=3, fig.width=6}
-
 p1a <- board_games_top50 %>%
   dplyr::filter(max_playtime < 738.75) %>%
   ggplot(aes(max_playtime, average_rating, colour = name)) +
@@ -246,13 +253,21 @@ p1a <- board_games_top50 %>%
 
 p1a
 ```
-Now we can have a clearer picture of where majority of top-50 ranked board games lie in the graph of average rating against maximum playtime. Where, majority of board games lie within the range of 200 minutes of maximum playtime.
+Now we can have a clearer picture of where majority of top-50 ranked board games lie in the graph of average rating against maximum playtime. Which, majority of board games lie within the range of 200 minutes of maximum playtime, the highest ranting board game also lies within the range, around 100 minutes of maximum playtime. Another thing to notice is that, for board games that have maximum playtime longer than 600 minutes, the rating is comparatively lower.
+
+Nearly half of high rating board games are crowded in the range of 0-200 minutes, suggesting that people tend to play board games that does not occupy too much leisure time.
 
 ```{r MinPlaytimeStat}
-summary(board_games_top50$min_playtime)
+iqr2 <- summary(board_games_top50$min_playtime)
+tidy(iqr2)
+```
 
-45 - 1.5*(180-45)
-180 + 1.5*(180-45)
+```{r iqr2-outlier}
+lo2 <- 45 - 1.5*(180-45)
+up2 <- 180 + 1.5*(180-45)
+
+tibble(lower_range = lo2,
+       upper_range = up2)
 ```
 
 ```{r BoxPlotMinPlaytime}
@@ -274,7 +289,6 @@ p2 <- board_games_top50 %>%
 
 p2
 ```
-
 * We have implemented the same method to omit the outliers as done previously, the graph demonstrates that in top-50 ranked board games, most of them have a minimum playtime less than 100 minutes.
 
 ```{r BoxPlotMinPlayers}
@@ -283,7 +297,7 @@ bpminplayers <- board_games_top50 %>% ggplot() +
   geom_hline(yintercept = median(board_games_top50$min_players), color='blue')
 ```
 
-```{r MinPlayersPlot, fig.align = "center", fig.height=3, fig.width=6}
+```{r MinPlayersPlot, fig.cap = "Relationship between Minimum Players and Average Rating", fig.align = "center", fig.height=3, fig.width=6}
 p3 <- board_games_top50 %>%
   ggplot(aes(min_players, average_rating, colour = name)) +
   geom_point(size = 2) +
@@ -295,7 +309,6 @@ p3 <- board_games_top50 %>%
 
 p3
 ```
-
 * In the scatterplot for average rating against minimum players, we observed that most top 50 board games have at least 2 players.
 
 ```{r BoxPlotMaxPlayers}
@@ -304,7 +317,7 @@ bpmaxplayers <- board_games_top50 %>% ggplot() +
   geom_hline(yintercept = median(board_games_top50$max_players), color='blue')
 ```
 
-```{r MaxPlayersPlot, fig.align = "center", fig.height=3, fig.width=6}
+```{r MaxPlayersPlot, fig.cap = "Relationship between Maximum Players and Average Rating", fig.align = "center", fig.height=3, fig.width=6}
 p4 <- board_games_top50 %>%
   dplyr::filter(max_players <15) %>%
   ggplot(aes(max_players, average_rating, colour = name)) +
@@ -319,6 +332,10 @@ p4
 ```
 
 * In the scatterplot for average rating against maximum players, we observed that most top 50 board games have a maximum of 4 or 5 players.
+
+* The figure \@ref(fig:MinPlayersPlot) and \@ref(fig:MaxPlayersPlot) indicates that majority of high rating board games have set the players to between 2 and 4/5 players. The limitation of players suggest that people tend to play board games that fulfills their sense of participation, for example, a board game of 8 players may not be as attractive as a board game of 2 players, because a 2-player game has little downtime than a 8-player game, and satisfies each players' sense of participation in the board game.
+
+* On the other hand, it is easier to gather a group of 2-4 people interesting in play board games at leisure time than gathering a group of 8 or more people.
 
 ```{r BoxPlotMinAge}
 bpminage <- board_games_top50 %>% ggplot() +
