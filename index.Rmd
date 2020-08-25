@@ -139,7 +139,7 @@ vis_miss(board_games) + ggtitle("Distribution of Missing Values")
 
 ### Questions of Interest
 
-1. What are the top 10 ranked board games?
+**1. What are the top 10 ranked board games?**
 
 ```{r Top10barchart, fig.cap='Top 10 ranked board games', fig.align = "center", fig.height=3, fig.width=6}
 Q1 <- board_games %>%
@@ -167,7 +167,7 @@ Q1 %>%
 ```
 
 
-2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?
+**2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?**
 
 * To have a better idea on the common characteristics of top-ranked board games, we have widened the range to top 50.(to ensure the reliability)
 
@@ -210,6 +210,7 @@ p1 <- board_games_top50 %>%
 
 ggplotly(p1)
 ```
+
 * In plot 1 we can see that there are a few obvious distinct values present, which are:
   + The Greatest Day:Sword, Juno, and Gold Beaches with 6000 minutes max. playtime and an average rating of 8.8308
   + Axis Empires: Totaler Krieg! with 3600 minutes max. playtime and average rating of 8.4194
@@ -344,7 +345,11 @@ p5
 gridExtra::grid.arrange(bpminage, grid.arrange(bpmaxplayers, bpminplayers, bpmaxplaytime, bpminplaytime))
 ```
 
-
+* All the insights for the top 50 popular games are summarized in the boxplots above as follows:
+  + Players of **age between 10-15 years** mostly play the top 50 games.
+  + A **maximum of 4 players** and **minimum of 2 players** is most popular in the top 50 games.
+  + The **maximum and minimum playtime** seem to be almost close and **range between 60-150 minutes** for top 50 games.
+  
 ## References
 
 * BoardGameGeek | Gaming Unplugged Since 2000. (2000). BGG. https://boardgamegeek.com/BoardGameGeek
