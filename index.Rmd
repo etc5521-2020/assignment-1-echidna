@@ -23,6 +23,7 @@ library(kableExtra)
 library(plotly)
 library(visdat)
 library(gridExtra)
+library(viridis)
 ```
 
 ```{r ReadData}
@@ -227,7 +228,7 @@ summary(board_games_top50$max_playtime)
 
 ```{r BoxPlotMaxPlaytime}
 bpmaxplaytime <- board_games_top50 %>% ggplot() +
-  geom_boxplot(mapping = aes(y= max_playtime), fill = "black") +
+  geom_boxplot(mapping = aes(y= max_playtime), fill = "white") +
   geom_hline(yintercept = median(board_games_top50$max_playtime), color='red')
 ```
 
@@ -256,7 +257,7 @@ summary(board_games_top50$min_playtime)
 
 ```{r BoxPlotMinPlaytime}
 bpminplaytime <- board_games_top50 %>% ggplot() +
-  geom_boxplot(mapping = aes(y= min_playtime), fill = "black") +
+  geom_boxplot(mapping = aes(y= min_playtime), fill = "white") +
   geom_hline(yintercept = median(board_games_top50$min_playtime), color='red')
 ```
 
@@ -322,8 +323,7 @@ p4
 ```{r BoxPlotMinAge}
 bpminage <- board_games_top50 %>% ggplot() +
   geom_boxplot(mapping = aes(y= min_age), fill = "white") +
-  geom_hline(yintercept = median(board_games_top50$min_age), color='green') +
-  ggtitle("Summarizing Insights")
+  geom_hline(yintercept = median(board_games_top50$min_age), color='green')
 ```
 
 ```{r MinAgePlot, fig.align = "center", fig.height=3, fig.width=6}
@@ -342,14 +342,81 @@ p5
 * In the scatterplot for average rating against minimum age of players, we observed that the minimum age set by majority of board games are between 10 - 15.
 
 ```{r BoxplotCompare, fig.cap='Summarizing all observations as Boxplots'}
-gridExtra::grid.arrange(bpminage, grid.arrange(bpmaxplayers, bpminplayers, bpmaxplaytime, bpminplaytime))
+grid.arrange(bpminplayers, bpmaxplayers, bpminplaytime, bpmaxplaytime)
 ```
 
 * All the insights for the top 50 popular games are summarized in the boxplots above as follows:
-  + Players of **age between 10-15 years** mostly play the top 50 games.
   + A **maximum of 4 players** and **minimum of 2 players** is most popular in the top 50 games.
   + The **maximum and minimum playtime** seem to be almost close and **range between 60-150 minutes** for top 50 games.
+
+```{r smooth, fig.cap='Relationship between Average Rating and other Attributes'}
+a <- board_games_top50 %>% ggplot(aes(x = average_rating, y = min_players)) + geom_point() +
+  geom_smooth()
+
+b <- board_games_top50 %>% ggplot(aes(x = average_rating, y = max_players)) + geom_point() +
+  geom_smooth()
+
+c <- board_games_top50 %>% ggplot(aes(x = average_rating, y = min_playtime)) + geom_point() +
+  geom_smooth()
+
+d <- board_games_top50 %>% ggplot(aes(x = average_rating, y = max_playtime)) + geom_point() +
+  geom_smooth()
+
+e <- board_games_top50 %>% ggplot(aes(x = average_rating, y = min_age)) + geom_point() +
+  geom_smooth()
+
+grid.arrange(a, b, c, d)
+```
+
+* The above plot shows a trend for different attributes against average rating on x-axis. We can get a better idea using this pattern.
+
+* We can observe the following trend for the top 50 rated games as average rating increases -
+  + The Minimum Players tends to be around 2 players. The Maximum Players tends to be around 4 and increases up to 6.
+  + The Minimum Playtime tends to vary between 60-500 minutes. The Maximum Playtime tends to vary between 150-1000 minutes.
   
+```{r}
+grid.arrange(bpminage, e)
+```
+
+* We can observe the following for the attribute Minimum Age -
+
+  + Players of **age between 10-15 years** mostly play the top 50 games.
+  + We can observe from the trend that games are more popular among **age group of 7-13 year olds**
+  
+**3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?**
+
+```{r Designers, fig.cap='Top 10 Game Designers'}
+top10 <- board_games_top50 %>% arrange(desc(average_rating)) %>% head(10)
+
+top10 %>% ggplot(aes(x = average_rating, y = designer, color = designer)) +
+  geom_point() + theme(axis.text.y = element_blank()) +
+  geom_text(label = top10$year_published, vjust = 0, nudge_y = 0.15) +
+  geom_vline(xintercept = mean(top10$average_rating)) +
+  xlab("Average Rating") + ylab("Designer") + ggtitle("Top 10 Game Designers")
+```
+
+* The above scatter-plot consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the mean average rating is around 8.82 with 5 observations on either side of the line.
+
+* Philippe Keyaerts has the highest rated game at around 9+ followed by Vlaada Chvatil around 8.93 with all the other designers falling around the mean value. The lesser rated designer in the top 10 is Rob Daviau, Matt Leacock. We should note that Dean Essig has two games in the top 10. 
+
+* Who among these is the best is still a debatable question. Some might say it is Dean, while some might consider Philippe. Nevertheless, all of the designers in the plot are among the top 10 and have produced the most popular games. 
+
+```{r Publishers, fig.cap='Top 7 Game Publishers'}
+top7 <- top10 %>% head(7)
+  
+top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
+  geom_point() + theme(axis.text.y = element_blank()) +
+  geom_text(label = top7$year_published, vjust = 0, nudge_y = 0.15) +
+  xlab("Average Rating") + ylab("Publisher") + ggtitle("Top 7 Game Publishers")
+```
+* The above scatter-plot consists of average rating on x-axis and publisher on y-axis.
+
+* The first thing that strikes from looking at this plot is that Multi-Man Publishing has 3 among the top 7 rated board games which hints that they are one of the best publishers.
+
+* The top rated game was published by Days of Wonder and the lesser rated game in the top 7 was published by Compass Games. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
+
+**Bonus Insight -** An interesting takeaway from the above two plots is that the best and **top rated board games were launched between 2010-2016** with most of the top rated games launched in the year **2015.**
+
 ## References
 
 * BoardGameGeek | Gaming Unplugged Since 2000. (2000). BGG. https://boardgamegeek.com/BoardGameGeek
