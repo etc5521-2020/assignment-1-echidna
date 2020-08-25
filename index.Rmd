@@ -51,7 +51,7 @@ Secondary Questions:
 
 1. What are the top 10 ranked board games?
 2. How do variables like min/max playtime, min/max players, or min_age affect the average rating?
-3. What is the relation between min_age and average_rating of games? Do children play more or adults play more?
+3. Which game designer was most successful in producing popular games?
 
 The variables included in the data are as follows:
 
@@ -337,8 +337,6 @@ p5
 ```{r BoxplotCompare}
 gridExtra::grid.arrange(bpmaxplayers, bpminplayers, bpmaxplaytime, bpminplaytime, bpminage)
 ```
-
-
 In the scatterplot for average rating against minimum age of players, we observed that the minimum age set by majority of board games are between 10 - 15.
 
 ## References
