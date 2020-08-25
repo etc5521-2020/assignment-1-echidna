@@ -22,7 +22,6 @@ library(kableExtra)
 library(plotly)
 library(visdat)
 library(gridExtra)
-library(viridis)
 library(broom)
 library(bookdown)
 library(knitr)
@@ -127,7 +126,7 @@ vis_dat(board_games) + ggtitle("Distribution of Data Types")
 ```
 
 
-* The plot above \@ref(fig:visdatData) clearly visualizes the distribution od data types in our dataset with column in x-axis and number of observations on the y-axis. This gives a concise overview of the data and what columns are useful for analysis. This plot hints that we can use all the numeric columns along with `designer` and `publisher` columns for our analysis.
+* The plot above \@ref(fig:visdatData) clearly visualizes the distribution of    data types in our dataset with column in x-axis and number of observations on the y-axis. This gives a concise overview of the data and what columns are useful for analysis. This plot hints that we can use all the numeric columns along with `designer` and `publisher` columns for our analysis.
 
 
 ```{r vismissData, fig.cap='Visualization of Missing Values', fig.align = "center", fig.height=4, fig.width=6}
@@ -292,6 +291,7 @@ p2 <- board_games_top50 %>%
 
 p2
 ```
+
 * We have implemented the same method to omit the outliers as done previously, the graph demonstrates that in top-50 ranked board games, most of them have a minimum playtime less than 100 minutes.
 
 ```{r BoxPlotMinPlayers}
@@ -431,6 +431,7 @@ top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
   geom_text(label = top7$year_published, vjust = 0, nudge_y = 0.15) +
   xlab("Average Rating") + ylab("Publisher") + ggtitle("Top 7 Game Publishers")
 ```
+
 * The above scatter-plot \@ref(fig:Publishers) consists of average rating on x-axis and publisher on y-axis.
 
 * The first thing that strikes from looking at this plot is that Multi-Man Publishing has 3 among the top 7 rated board games which hints that they are one of the best publishers.
@@ -460,9 +461,6 @@ top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
   
 * Hao Zhu (2019). kableExtra: Construct Complex Table with 'kable' and Pipe Syntax. R
   package version 1.1.0. https://CRAN.R-project.org/package=kableExtra
-  
-* Simon Garnier (2018). viridis: Default Color Maps from 'matplotlib'. R package version
-  0.5.1. https://CRAN.R-project.org/package=viridis
   
 * Tierney N (2017). “visdat: Visualising Whole Data Frames.” _JOSS_, *2*(16), 355. doi:
 10.21105/joss.00355 (URL: https://doi.org/10.21105/joss.00355), <URL:
