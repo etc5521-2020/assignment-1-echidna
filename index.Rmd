@@ -7,6 +7,7 @@ author:
   - [Rahul Bharadwaj]
 date: "`r Sys.Date()`"
 output: bookdown::html_document2
+
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +17,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       fig.align = 'center')
 ```
 
-```{r Libraries}
+```{r Libraries, include = FALSE}
 library(tidyverse)
 library(kableExtra)
 library(plotly)
@@ -27,7 +28,7 @@ library(bookdown)
 library(knitr)
 ```
 
-```{r ReadData}
+```{r ReadData, include = FALSE}
 board_games <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-12/board_games.csv")
 ```
 
@@ -114,7 +115,7 @@ The data set is then filtered to board games published from 1950 to 2016, with a
 ## Initial Data Analysis
 
 * Initial Data Analysis is a process which helps one get a feel of the data in question. This helps us have an overview of the data and gives insights about potential Exlporatory Data Analyis (EDA).
-* Initial data analysis is the process of data inspection steps to be carried out after the research plan and data collection have been finished but before formal statistical analyses. The purpose is to minimize the risk of incorrect or misleading results. Link for more info
+* Initial data analysis is the process of data inspection steps to be carried out after the research plan and data collection have been finished but before formal statistical analyses. The purpose is to minimize the risk of incorrect or misleading results.
 * IDA can be divided into 3 main steps:
   + Data cleaning is the identification of inconsistencies in the data and the resolution of any such issues.
   + Data screening is the description of the data properties.
@@ -175,8 +176,6 @@ Q1 %>%
 
 **2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?**
 
-* To have a better idea on the common characteristics of top-ranked board games and ensuring the reliability of the results, we have widened the range to top 50.
-
 ```{r Top50Create}
 board_games_top50 <- board_games %>%
   dplyr::select(game_id, 
@@ -216,6 +215,9 @@ p1 <- board_games_top50 %>%
 ggplotly(p1)
 ```
 
+
+* To have a better idea on the common characteristics of top-ranked board games and ensuring the reliability of the results, we have widened the range to top 50.
+
 * In plot \@ref(fig:MaxPlaytime) we can see that there are a few obvious distinct values present, which are:
   + The Greatest Day:Sword, Juno, and Gold Beaches with 6000 minutes max. playtime and an average rating of 8.8308
   + Axis Empires: Totaler Krieg! with 3600 minutes max. playtime and average rating of 8.4194
@@ -227,6 +229,7 @@ ggplotly(p1)
 iqr1 <- summary(board_games_top50$max_playtime)
 tidy(iqr1)
 ```
+
 ```{r iqr1-outlier}
 lo1 <- 82.5 - 1.5*(345-82.5)
 up1 <- 345 + 1.5*(345-82.5)
@@ -259,12 +262,12 @@ Now we can have a clearer picture of where majority of top-50 ranked board games
 
 Nearly half of high rating board games are crowded in the range of 0-200 minutes, suggesting that people tend to play board games that does not occupy too much leisure time.
 
-```{r MinPlaytimeStat}
+```{r MinPlaytimeStat, include = FALSE}
 iqr2 <- summary(board_games_top50$min_playtime)
 tidy(iqr2)
 ```
 
-```{r iqr2-outlier}
+```{r iqr2-outlier, include = FALSE}
 lo2 <- 45 - 1.5*(180-45)
 up2 <- 180 + 1.5*(180-45)
 
@@ -445,6 +448,8 @@ top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
 *Websites*
 
 * BoardGameGeek | Gaming Unplugged Since 2000. (2000). BGG. https://boardgamegeek.com/BoardGameGeek
+
+* Huebner, M., Vach, W. and le Cessie, S., 2016. A systematic approach to initial data analysis is good research practice. The Journal of Thoracic and Cardiovascular Surgery, 151(1), pp.25-27.
 
 * Thomas Mock, (2019). Tidy Tuesday. https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12
 
