@@ -6,15 +6,16 @@ author:
   - [Ruimin Lin]
   - [Rahul Bharadwaj]
 date: "`r Sys.Date()`"
-output: bookdown::html_document2
-
+output:
+  bookdown::html_document2
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       warning = FALSE,
-                      fig.align = 'center')
+                      fig.align = 'center',
+                      fig.pos = 'H')
 ```
 
 ```{r Libraries, include = FALSE}

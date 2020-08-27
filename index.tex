@@ -1,0 +1,584 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={ETC5521 Assignment 1},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\title{ETC5521 Assignment 1}
+\author{Ruimin Lin \and Rahul Bharadwaj}
+\date{2020-08-27}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+{This assignment is for ETC5521 Assignment 1 by Team Echidna comprising of Ruimin Lin and Rahul Bharadwaj.}
+
+\hypertarget{introduction-and-motivation}{%
+\section{Introduction and Motivation}\label{introduction-and-motivation}}
+
+Board Game has been a type of leisure that people have enjoyed from a very long time even before computers and video-games existed and has gone through enormous evolution ever since its inception. Board Games enables a way for people to socialize, reducing stress under such a fast-moving society, and paves way for an extensive brain exercise. Being a popular choice of leisure, what makes board games great? What is the reason for Board Games to have survived in a world of Virtual Reality games? In other words, what are the common characteristics of top ranked board games? What are the best board games in terms of average rating?
+
+The original board games data used in this report is obtained from the \href{https://boardgamegeek.com/}{Board Game Geek} database, and is cleaned and shared by \href{https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12}{Thomas Mock}.
+
+The tidy dataset consists of 22 columns and 10532 rows, in which there are 22 variables and 10532 observations. It consists of data such as max/min playtime, max/min players, min age of players that can play, game designer, game publisher, mechanics of the game and a lot more. One thing to notice is that even though the data set is tidy, we still find observations in variables like \texttt{category}, \texttt{family}, \texttt{mechanic} to be messy and repetitive, which may limit our ability to explore these variables.
+
+\hypertarget{data-description}{%
+\section{Data Description}\label{data-description}}
+
+The aim of this exploratory analysis is to find out what factor affects the average rating of board games. This would give insights as to what board games are most popular and the characteristics these board games share. Therefore, we have articulated the following questions to help us with further exploration of the board games data.
+
+Primary Question:
+
+\textbf{What are the common characteristics of top ranked board games?}
+
+Secondary Questions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What are the top 10 ranked board games?
+\item
+  How do variables like min/max playtime, min/max players, or min\_age affect the average rating?
+\item
+  Which game designer was most successful in producing popular games? Which publisher published the most popular games?
+\end{enumerate}
+
+The variables included in the data are as follows:
+
+\begin{verbatim}
+## Rows: 10,532
+## Columns: 22
+## $ game_id        <dbl> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
+## $ description    <chr> "Die Macher is a game about seven sequential politic...
+## $ image          <chr> "//cf.geekdo-images.com/images/pic159509.jpg", "//cf...
+## $ max_players    <dbl> 5, 4, 4, 4, 6, 6, 2, 5, 4, 6, 7, 5, 4, 4, 6, 4, 2, 8...
+## $ max_playtime   <dbl> 240, 30, 60, 60, 90, 240, 20, 120, 90, 60, 45, 60, 1...
+## $ min_age        <dbl> 14, 12, 10, 12, 12, 12, 8, 12, 13, 10, 13, 12, 10, 1...
+## $ min_players    <dbl> 3, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 3, 2, 3, 2, 2...
+## $ min_playtime   <dbl> 240, 30, 30, 60, 90, 240, 20, 120, 90, 60, 45, 45, 6...
+## $ name           <chr> "Die Macher", "Dragonmaster", "Samurai", "Tal der Kö...
+## $ playing_time   <dbl> 240, 30, 60, 60, 90, 240, 20, 120, 90, 60, 45, 60, 1...
+## $ thumbnail      <chr> "//cf.geekdo-images.com/images/pic159509_t.jpg", "//...
+## $ year_published <dbl> 1986, 1981, 1998, 1992, 1964, 1989, 1978, 1993, 1998...
+## $ artist         <chr> "Marcus Gschwendtner", "Bob Pepper", "Franz Vohwinke...
+## $ category       <chr> "Economic,Negotiation,Political", "Card Game,Fantasy...
+## $ compilation    <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "CAT...
+## $ designer       <chr> "Karl-Heinz Schmiel", "G. W. \"Jerry\" D'Arcey", "Re...
+## $ expansion      <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, "Elfengold,Elfen...
+## $ family         <chr> "Country: Germany,Valley Games Classic Line", "Anima...
+## $ mechanic       <chr> "Area Control / Area Influence,Auction/Bidding,Dice ...
+## $ publisher      <chr> "Hans im Glück Verlags-GmbH,Moskito Spiele,Valley Ga...
+## $ average_rating <dbl> 7.66508, 6.60815, 7.44119, 6.60675, 7.35830, 6.52534...
+## $ users_rated    <dbl> 4498, 478, 12019, 314, 15195, 73, 2751, 186, 1263, 6...
+\end{verbatim}
+
+The explanation of variables and variable types are provided to enable a better understanding of the variables in board games data set.
+
+\begin{itemize}
+\item
+  game\_id: ID of a particular game, the game\_id should be a character vector(categorical) instead of a double vector mentioned in the table above.
+\item
+  description: Game description, a character vector.
+\item
+  image: URL image of the game, a character vector.
+\item
+  max\_players/min\_player: maximum/minimum number of recommended players, double vectors.
+\item
+  max\_playtime/min\_playtime: maximum/minimum recommended playtime, double vectors.
+\item
+  min\_age: recommended minimum player age, double vectors.
+\item
+  name: name of the game, a character vector.
+\item
+  playing\_time: average playtime of a game, a double vector.
+\item
+  thumbnail: URL thumbnail of the game, a character vector.
+\item
+  year\_published: year the game was published, a double vector.
+\item
+  artist: artist for game art, a character vector.
+\item
+  category: categories of the game, a character vector.
+\item
+  compilation: name of compilation, a character vector.
+\item
+  designer: game designer, a character vector.
+\item
+  expansion: name of expansion pack (if any), a character vector.
+\item
+  family: family of game - equivalent to a publisher, a character vector.
+\item
+  mechanic: how game is played, a character vector.
+\item
+  publisher: company/person who published the game, a character vector.
+\item
+  average\_rating: average rating from 1 to 10 on the website(Board Games Geek), a double vector.
+\item
+  users\_rated: number of users rated the game, a double vector.
+\end{itemize}
+
+To ensure the reliability of the board game ratings, the data is limited to games with at least 50 ratings and for games between 1950 and 2016. The site's database has more than 90,000 games with crowd-sourced ratings.
+
+The original board games data set consists of 90400 observations, and 80 variables. Therefore, data cleaning and wrangling is necessary to enable better analysis procedure. Thomas has replaced long and complicated variable names like \texttt{details.description} in original data to \texttt{description} using \texttt{janitor::clean\_names} and \texttt{set\_names} function, which avoids messy code writing. In addition, he has eliminated around 50 variables using the \texttt{select} function and that leaves 27 variables at this stage.
+
+The data set is then filtered to board games published from 1950 to 2016, with at least 50 users rated. `NA' values in variable \texttt{year\_published} is also omitted. Thomas then excludes variables that may not be useful for the analysis, such as \texttt{attributes\_total}, \texttt{game\_type} etc., which ultimately, leaves us with a tidy data set (22 variables and 10532 variables) that is relatively concise and convenient for further exploration.
+
+\hypertarget{analysis-and-findings}{%
+\section{Analysis and Findings}\label{analysis-and-findings}}
+
+\hypertarget{initial-data-analysis}{%
+\subsection{Initial Data Analysis}\label{initial-data-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  Initial Data Analysis is a process which helps one get a feel of the data in question. This helps us have an overview of the data and gives insights about potential Exlporatory Data Analyis (EDA).
+\item
+  Initial data analysis is the process of data inspection steps to be carried out after the research plan and data collection have been finished but before formal statistical analyses. The purpose is to minimize the risk of incorrect or misleading results.
+\item
+  IDA can be divided into 3 main steps:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Data cleaning is the identification of inconsistencies in the data and the resolution of any such issues.
+  \item
+    Data screening is the description of the data properties.
+  \item
+    Documentation and reporting preserve the information for the later statistical analysis and models.
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/visdatData-1} 
+
+}
+
+\caption{Visualization of Data Types}\label{fig:visdatData}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  The plot above \ref{fig:visdatData} clearly visualizes the distribution of data types in our dataset with column in x-axis and number of observations on the y-axis. This gives a concise overview of the data and what columns are useful for analysis. This plot hints that we can use all the numeric columns along with \texttt{designer} and \texttt{publisher} columns for our analysis.
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/vismissData-1} 
+
+}
+
+\caption{Visualization of Missing Values}\label{fig:vismissData}
+\end{figure}
+
+\begin{itemize}
+\item
+  The above plot \ref{fig:vismissData} shows the percentage of missing values and where exactly they are missing with x-axis showing columns and the y-axis showing the corresponding observations. We can also observe that each column has a percentage of missing values mentioned which come in handy while deciding what columns not to pick for analysis.
+\item
+  It is evident that the following columns have missing values and are not of much use for the analysis:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{compilation} - 96.11\% missing
+  \item
+    \texttt{expansion} - 73.87\% missing
+  \item
+    \texttt{family} - 26.66\% missing
+  \item
+    \texttt{mechanic} - 9.02\% missing
+  \end{itemize}
+\item
+  This is a limitation of the dataset and we frame our questions keeping this in mind.
+\end{itemize}
+
+\hypertarget{questions-of-interest}{%
+\subsection{Questions of Interest}\label{questions-of-interest}}
+
+\textbf{1. What are the top 10 ranked board games?}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/Top10barchart-1} 
+
+}
+
+\caption{Top 10 ranked board games}\label{fig:Top10barchart}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l|r|r|r|r|r}
+\hline
+name & average\_rating & max\_playtime & min\_playtime & max\_players & min\_players\\
+\hline
+Small World Designer Edition & 9.00392 & 80 & 40 & 6 & 2\\
+\hline
+Kingdom Death: Monster & 8.93184 & 180 & 60 & 6 & 1\\
+\hline
+Terra Mystica: Big Box & 8.84862 & 150 & 60 & 5 & 2\\
+\hline
+Last Chance for Victory & 8.84603 & 60 & 60 & 2 & 2\\
+\hline
+The Greatest Day: Sword, Juno, and Gold Beaches & 8.83081 & 6000 & 60 & 8 & 2\\
+\hline
+Last Blitzkrieg & 8.80263 & 960 & 180 & 4 & 2\\
+\hline
+Enemy Action: Ardennes & 8.75802 & 600 & 0 & 2 & 1\\
+\hline
+Through the Ages: A New Story of Civilization & 8.74235 & 240 & 180 & 4 & 2\\
+\hline
+1817 & 8.70848 & 540 & 360 & 7 & 3\\
+\hline
+Pandemic Legacy: Season 1 & 8.66878 & 60 & 60 & 4 & 2\\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{2. How do variables like min/max playtime, min/max players, or min\_age affect the average rating in these top-ranked board games?}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/visdatTop50-1} 
+
+}
+
+\caption{Visualization of Data Types in Top 50 Games}\label{fig:visdatTop50}
+\end{figure}
+
+\begin{itemize}
+\item
+  The above plot \ref{fig:visdatTop50} shows a distribution of Data Types in our Top 50 Games dataset with x-axis showing column names and y-axis its corresponding observations.
+\item
+  It is evident that our selection of columns is appropriate and there are no missing values in our data. Hence, we need not check for missing values through \texttt{vis\_miss()} function. We can use all these columns for an effective analysis of our questions of interest.
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/MaxPlaytime-1} 
+
+}
+
+\caption{Relationship between Maximum Playtime and Average Rating}\label{fig:MaxPlaytime}
+\end{figure}
+
+\begin{itemize}
+\item
+  To have a better idea on the common characteristics of top-ranked board games and ensuring the reliability of the results, we have widened the range to top 50.
+\item
+  In plot \ref{fig:MaxPlaytime} we can see that there are a few obvious distinct values present, which are:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The Greatest Day:Sword, Juno, and Gold Beaches with 6000 minutes max. playtime and an average rating of 8.8308
+  \item
+    Axis Empires: Totaler Krieg! with 3600 minutes max. playtime and average rating of 8.4194
+  \item
+    Beyond the Rhine with 3000 minutes max. playtime and average rating of 8.5979
+  \end{itemize}
+\item
+  It is difficult to examine the trend or common characteristics with these outliers presents, therefore, we have limited the maximum playtime to less than xx minutes using the IQR outliers formula. (Q1 - 1.5IQR and Q3 + 1.5 IQR)
+\end{itemize}
+
+\begin{verbatim}
+## # A tibble: 1 x 6
+##   minimum    q1 median  mean    q3 maximum
+##     <dbl> <dbl>  <dbl> <dbl> <dbl>   <dbl>
+## 1       0  82.5   142.  461.   345    6000
+\end{verbatim}
+
+\begin{verbatim}
+## # A tibble: 1 x 2
+##   lower_range upper_range
+##         <dbl>       <dbl>
+## 1       -311.        739.
+\end{verbatim}
+
+\begin{center}\includegraphics{index_files/figure-latex/MaxPlaytimePlot-1} \end{center}
+
+Now we can have a clearer picture of where majority of top-50 ranked board games lie in the graph of average rating against maximum playtime. Which, majority of board games lie within the range of 200 minutes of maximum playtime, the highest ranting board game also lies within the range, around 100 minutes of maximum playtime. Another thing to notice is that, for board games that have maximum playtime longer than 600 minutes, the rating is comparatively lower.
+
+Nearly half of high rating board games are crowded in the range of 0-200 minutes, suggesting that people tend to play board games that does not occupy too much leisure time.
+
+\begin{center}\includegraphics{index_files/figure-latex/MinPlaytimePlot-1} \end{center}
+
+\begin{itemize}
+\tightlist
+\item
+  We have implemented the same method to omit the outliers as done previously, the graph demonstrates that in top-50 ranked board games, most of them have a minimum playtime less than 100 minutes.
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/MinPlayersPlot-1} 
+
+}
+
+\caption{Relationship between Minimum Players and Average Rating}\label{fig:MinPlayersPlot}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  In the scatterplot for average rating against minimum players, we observed that most top 50 board games have at least 2 players.
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/MaxPlayersPlot-1} 
+
+}
+
+\caption{Relationship between Maximum Players and Average Rating}\label{fig:MaxPlayersPlot}
+\end{figure}
+
+\begin{itemize}
+\item
+  In the scatterplot for average rating against maximum players, we observed that most top 50 board games have a maximum of 4 or 5 players.
+\item
+  The figure \ref{fig:MinPlayersPlot} and \ref{fig:MaxPlayersPlot} indicates that majority of high rating board games have set the players to between 2 and 4/5 players. The limitation of players suggest that people tend to play board games that fulfills their sense of participation, for example, a board game of 8 players may not be as attractive as a board game of 2 players, because a 2-player game has little downtime than a 8-player game, and satisfies each players' sense of participation in the board game.
+\item
+  On the other hand, it is easier to gather a group of 2-4 people interesting in play board games at leisure time than gathering a group of 8 or more people.
+\end{itemize}
+
+\begin{center}\includegraphics{index_files/figure-latex/MinAgePlot-1} \end{center}
+
+\begin{itemize}
+\tightlist
+\item
+  In the scatterplot for average rating against minimum age of players, we observed that the minimum age set by majority of board games are between 10 - 15.
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/BoxplotCompare-1} 
+
+}
+
+\caption{Summarizing all observations as Boxplots}\label{fig:BoxplotCompare}
+\end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  All the insights for the top 50 popular games are summarized in the boxplots above as follows:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A \textbf{maximum of 4 players} and \textbf{minimum of 2 players} is most popular in the top 50 games.
+  \item
+    The \textbf{maximum and minimum playtime} seem to be almost close and \textbf{range between 60-150 minutes} for top 50 games.
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/smooth-1} 
+
+}
+
+\caption{Relationship between Average Rating and other Attributes}\label{fig:smooth}
+\end{figure}
+
+\begin{itemize}
+\item
+  The above plot \ref{fig:smooth} shows a trend for different attributes against average rating on x-axis. We can get a better idea using this pattern.
+\item
+  We can observe the following trend for the top 50 rated games as average rating increases -
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The Minimum Players tends to be around 2 players. The Maximum Players tends to be around 4 and increases up to 6.
+  \item
+    The Minimum Playtime tends to vary between 60-500 minutes. The Maximum Playtime tends to vary between 150-1000 minutes.
+  \end{itemize}
+\end{itemize}
+
+\begin{center}\includegraphics{index_files/figure-latex/unnamed-chunk-1-1} \end{center}
+
+\begin{itemize}
+\item
+  We can observe the following for the attribute Minimum Age -
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Players of \textbf{age between 10-15 years} mostly play the top 50 games.
+  \item
+    We can observe from the trend that games are more popular among \textbf{age group of 7-13 year olds}
+  \end{itemize}
+\end{itemize}
+
+\textbf{3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/Designers-1} 
+
+}
+
+\caption{Top 10 Game Designers}\label{fig:Designers}
+\end{figure}
+
+\begin{itemize}
+\item
+  The above scatter-plot \ref{fig:Designers} consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the mean average rating is around 8.82 with 5 observations on either side of the line.
+\item
+  Philippe Keyaerts has the highest rated game at around 9+ followed by Vlaada Chvatil around 8.93 with all the other designers falling around the mean value. The lesser rated designer in the top 10 is Rob Daviau, Matt Leacock. We should note that Dean Essig has two games in the top 10.
+\item
+  Who among these is the best is still a debatable question. Some might say it is Dean, while some might consider Philippe. Nevertheless, all of the designers in the plot are among the top 10 and have produced the most popular games.
+\end{itemize}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{index_files/figure-latex/Publishers-1} 
+
+}
+
+\caption{Top 7 Game Publishers}\label{fig:Publishers}
+\end{figure}
+
+\begin{itemize}
+\item
+  The above scatter-plot \ref{fig:Publishers} consists of average rating on x-axis and publisher on y-axis.
+\item
+  The first thing that strikes from looking at this plot is that Multi-Man Publishing has 3 among the top 7 rated board games which hints that they are one of the best publishers.
+\item
+  The top rated game was published by Days of Wonder and the lesser rated game in the top 7 was published by Compass Games. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
+\end{itemize}
+
+\textbf{Bonus Insight -} An interesting takeaway from the above two plots is that the best and \textbf{top rated board games were launched between 2010-2016} with most of the top rated games launched in the year \textbf{2015.}
+
+\hypertarget{references}{%
+\section{References}\label{references}}
+
+\emph{Websites}
+
+\begin{itemize}
+\item
+  BoardGameGeek \textbar{} Gaming Unplugged Since 2000. (2000). BGG. \url{https://boardgamegeek.com/BoardGameGeek}
+\item
+  Huebner, M., Vach, W. and le Cessie, S., 2016. A systematic approach to initial data analysis is good research practice. The Journal of Thoracic and Cardiovascular Surgery, 151(1), pp.25-27.
+\item
+  Thomas Mock, (2019). Tidy Tuesday. \url{https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12}
+\end{itemize}
+
+\emph{R packages}
+
+\begin{itemize}
+\item
+  Baptiste Auguie (2017). gridExtra: Miscellaneous Functions for ``Grid'' Graphics. R
+  package version 2.3. \url{https://CRAN.R-project.org/package=gridExtra}
+\item
+  C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman
+  and Hall/CRC Florida, 2020.
+\item
+  David Robinson, Alex Hayes and Simon Couch (2020). broom: Convert Statistical Objects
+  into Tidy Tibbles. R package version 0.7.0. \url{https://CRAN.R-project.org/package=broom}
+\item
+  Hao Zhu (2019). kableExtra: Construct Complex Table with `kable' and Pipe Syntax. R
+  package version 1.1.0. \url{https://CRAN.R-project.org/package=kableExtra}
+\item
+  Tierney N (2017). ``visdat: Visualising Whole Data Frames.'' \emph{JOSS}, \emph{2}(16), 355. doi:
+  10.21105/joss.00355 (URL: \url{https://doi.org/10.21105/joss.00355}), \textless URL:
+  \url{http://dx.doi.org/10.21105/joss.00355}\textgreater.
+\item
+  Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43),
+  1686, \url{https://doi.org/10.21105/joss.01686}
+\item
+  Yihui Xie (2020). bookdown: Authoring Books and Technical Documents with R Markdown. R
+  package version 0.20.
+\item
+  Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R
+  package version 1.29.
+\end{itemize}
+
+\end{document}
