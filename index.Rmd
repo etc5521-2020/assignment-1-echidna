@@ -246,7 +246,7 @@ bpmaxplaytime <- board_games_top50 %>%
   geom_hline(yintercept = median(board_games_top50$max_playtime), color='red')
 ```
 
-```{r MaxPlaytimePlot, fig.align = "center", fig.height=3, fig.width=6}
+```{r MaxPlaytimePlot, fig.cap = 'Adjusted Maximum Playtime', fig.align = "center", fig.height=3, fig.width=6}
 p1a <- board_games_top50 %>%
   dplyr::filter(max_playtime < 738.75) %>%
   ggplot(aes(max_playtime, average_rating, colour = name)) +
@@ -282,7 +282,7 @@ bpminplaytime <- board_games_top50 %>% ggplot() +
   geom_hline(yintercept = median(board_games_top50$min_playtime), color='red')
 ```
 
-```{r MinPlaytimePlot, fig.align = "center", fig.height=3, fig.width=6}
+```{r MinPlaytimePlot, fig.cap='Minimum Playtime Plot', fig.align = "center", fig.height=3, fig.width=6}
 p2 <- board_games_top50 %>%
   dplyr::filter(min_playtime < 382.5) %>%
   ggplot(aes(min_playtime, average_rating, colour = name)) +
@@ -351,7 +351,7 @@ bpminage <- board_games_top50 %>% ggplot() +
   geom_hline(yintercept = median(board_games_top50$min_age), color='green')
 ```
 
-```{r MinAgePlot, fig.align = "center", fig.height=3, fig.width=6}
+```{r MinAgePlot, fig.cap='Minimum Age Plot', fig.align = "center", fig.height=3, fig.width=6}
 p5 <- board_games_top50 %>%
   ggplot(aes(min_age, average_rating, colour = name)) +
   geom_point(size = 2) +
@@ -397,10 +397,10 @@ grid.arrange(a, b, c, d)
 * The above plot \@ref(fig:smooth) shows a trend for different attributes against average rating on x-axis. We can get a better idea using this pattern.
 
 * We can observe the following trend for the top 50 rated games as average rating increases -
-  + The Minimum Players tends to be around 2 players. The Maximum Players tends to be around 4 and increases up to 6.
-  + The Minimum Playtime tends to vary between 60-500 minutes. The Maximum Playtime tends to vary between 150-1000 minutes.
+  + The **Minimum Players** tends to be around **2 players**. The **Maximum Players** tends to be **around 4 and increases up to 6**.
+  + The **Minimum Playtime** tends to vary between **60-500 minutes**. The **Maximum Playtime** tends to vary between **150-1000 minutes**.
   
-```{r}
+```{r minagecompare, fig.cap='Minimum Age Plots'}
 grid.arrange(bpminage, e)
 ```
 
@@ -421,9 +421,9 @@ top10 %>% ggplot(aes(x = average_rating, y = designer, color = designer)) +
   xlab("Average Rating") + ylab("Designer") + ggtitle("Top 10 Game Designers")
 ```
 
-* The above scatter-plot \@ref(fig:Designers) consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the mean average rating is around 8.82 with 5 observations on either side of the line.
+* The above scatter-plot \@ref(fig:Designers) consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the **mean average rating is around 8.82** with 5 observations on either side of the line.
 
-* Philippe Keyaerts has the highest rated game at around 9+ followed by Vlaada Chvatil around 8.93 with all the other designers falling around the mean value. The lesser rated designer in the top 10 is Rob Daviau, Matt Leacock. We should note that Dean Essig has two games in the top 10. 
+* **Philippe Keyaerts** has the **highest rated game** at around 9+ followed by **Vlaada Chvatil** around 8.93 with all the other designers falling around the mean value. The **lesser rated designer** in the top 10 is **Rob Daviau, Matt Leacock**. We should note that Dean Essig has two games in the top 10. 
 
 * Who among these is the best is still a debatable question. Some might say it is Dean, while some might consider Philippe. Nevertheless, all of the designers in the plot are among the top 10 and have produced the most popular games. 
 
@@ -438,9 +438,9 @@ top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
 
 * The above scatter-plot \@ref(fig:Publishers) consists of average rating on x-axis and publisher on y-axis.
 
-* The first thing that strikes from looking at this plot is that Multi-Man Publishing has 3 among the top 7 rated board games which hints that they are one of the best publishers.
+* The first thing that strikes from looking at this plot is that **Multi-Man Publishing has 3 among the top 7 rated board games** which hints that they are one of the best publishers.
 
-* The top rated game was published by Days of Wonder and the lesser rated game in the top 7 was published by Compass Games. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
+* The **top rated game was published by Days of Wonder** and the **lesser rated game** in the top 7 was published by **Compass Games**. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
 
 **Bonus Insight -** An interesting takeaway from the above two plots is that the best and **top rated board games were launched between 2010-2016** with most of the top rated games launched in the year **2015.**
 
@@ -450,7 +450,7 @@ top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
 
 * BoardGameGeek | Gaming Unplugged Since 2000. (2000). BGG. https://boardgamegeek.com/BoardGameGeek
 
-* Huebner, M., Vach, W. and le Cessie, S., 2016. A systematic approach to initial data analysis is good research practice. The Journal of Thoracic and Cardiovascular Surgery, 151(1), pp.25-27.
+* Huebner, M., Vach, W. and le Cessie, S., 2016. [A systematic approach to initial data analysis](https://www.sciencedirect.com/science/article/pii/S0022522315017948#:~:text=Initial%20data%20analysis%20is%20the,of%20incorrect%20or%20misleading%20results.) is good research practice. The Journal of Thoracic and Cardiovascular Surgery, 151(1), pp.25-27.
 
 * Thomas Mock, (2019). Tidy Tuesday. https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-12
 
