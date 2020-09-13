@@ -27,6 +27,7 @@ library(gridExtra)
 library(broom)
 library(bookdown)
 library(knitr)
+library(dplyr)
 ```
 
 ```{r ReadData, include = FALSE}
@@ -443,6 +444,64 @@ top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
 * The **top rated game was published by Days of Wonder** and the **lesser rated game** in the top 7 was published by **Compass Games**. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
 
 **Bonus Insight -** An interesting takeaway from the above two plots is that the best and **top rated board games were launched between 2010-2016** with most of the top rated games launched in the year **2015.**
+
+**4. How have the current best categories evolved over time, with respect to average rating?**
+
+```{r categ-sep}
+categ <- board_games %>% 
+  select(year_published, category, average_rating)
+
+
+categ <- categ %>% 
+  separate(col = category, into = c("categ1", "categ2", "categ3"), sep = "\\,")
+
+```
+
+```{r cat-rank}
+
+categ_iso <- categ %>%
+  filter(year_published == 2016) %>% 
+  group_by(categ1) %>% 
+  mutate(mean_rating = mean(average_rating))
+
+topcat <- data.frame(unique(categ_iso$categ1))
+
+topcat <- topcat %>% 
+  rename(categ1 = unique.categ_iso.categ1.)
+
+categ_iso1 <- categ_iso %>% 
+  select(categ1, mean_rating)
+
+topcat <- topcat %>% 
+  left_join(categ_iso1, by = "categ1")
+
+topcat <- distinct(topcat)
+
+topcat <- topcat %>% 
+  arrange(desc(mean_rating)) %>% 
+  head(10)
+
+catp1 <- topcat %>% 
+  ggplot(aes(reorder(categ1, -mean_rating), mean_rating, fill = categ1, label = categ1)) +
+  geom_col() +
+  geom_text(size = 2.5, angle = 90, position = position_stack(vjust = 1.09)) +
+  theme(axis.text.x = element_blank(),
+        legend.position = "none") +
+  xlab("Board game category") +
+  ylab("Average rating") +
+  ggtitle("Top 10 Ranked Board Game categories in 2016")
+
+ggplotly(catp1)
+```
+
+* It is clear from the above graph that American Indian Wars category has the highest rating in the most recent yearly data available (2016). 
+
+* An interesting point to note about human behavior and how we like to pass our free time, when we see that  **6 out of those top 10 categories of board games are war related.** 
+
+* For anyone reading this paper in a relevant field, it would be an interesting psychological experiment to understand why we, as a species, are so drawn to war-like scenarios even during our innocent board game time. 
+
+
+
 
 # References
 
