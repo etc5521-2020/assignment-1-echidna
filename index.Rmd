@@ -447,61 +447,170 @@ top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
 
 **4. How have the current best categories evolved over time, with respect to average rating?**
 
+Important note - Majority of the games are classified into multiple categories at once. For example, the game Top Trumps has about 14 categories it has been classified under. 
+Therefore, the calculation of number of games under each category will be an overlapping process, as one game would be classsified under various categories. If one would calculate the percentage of games under all category, it will be higher than 100%.
+
+Even so, it gives us a good understanding about the popularity of a category, and for new game developers to look into which category they should target for their next upcoming games.
+
 ```{r categ-sep}
 categ <- board_games %>% 
   select(year_published, category, average_rating)
 
 
-categ <- categ %>% 
-  separate(col = category, into = c("categ1", "categ2", "categ3"), sep = "\\,")
+categ_all <- categ %>% 
+  separate(col = category, into = c("categ1", "categ2", "categ3", "categ4", "categ5", "categ6", "categ7", "categ8", "categ9", "categ10", "categ11", "categ12", "categ13", "categ14"), sep = "\\,")
 
 ```
 
-```{r cat-rank}
+```{r data-clean}
 
-categ_iso <- categ %>%
+categ_all$average_rating <- round(categ_all$average_rating, 2)
+
+categ_one <- categ_all %>% 
+  select(year_published, categ1, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ1)
+
+categ_two <- categ_all %>% 
+  select(year_published, categ2, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ2)
+
+categ_three <- categ_all %>% 
+  select(year_published, categ3, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ3)
+
+categ_four <- categ_all %>% 
+  select(year_published, categ4, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ4)
+
+categ_five <- categ_all %>% 
+  select(year_published, categ5, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ5)
+
+categ_six <- categ_all %>% 
+  select(year_published, categ6, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ6)
+
+categ_seven <- categ_all %>% 
+  select(year_published, categ7, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ7)
+
+categ_eight <- categ_all %>% 
+  select(year_published, categ8, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ8)
+
+categ_nine <- categ_all %>% 
+  select(year_published, categ9, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ9)
+
+categ_ten<- categ_all %>% 
+  select(year_published, categ10, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ10)
+
+categ_eleven <- categ_all %>% 
+  select(year_published, categ11, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ11)
+
+categ_twelve <- categ_all %>% 
+  select(year_published, categ12, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ12)
+
+categ_thirteen <- categ_all %>% 
+  select(year_published, categ13, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ13)
+
+categ_fourteen <- categ_all %>% 
+  select(year_published, categ14, average_rating) %>% 
+  na.omit() %>% 
+  rename(cat = categ14)
+
+categ_comb <- bind_rows(categ_one,categ_two,categ_three,categ_four,categ_five,categ_six,categ_seven,categ_eight,categ_nine,categ_ten,categ_eleven,categ_twelve,categ_thirteen,categ_fourteen)
+
+categ_comb <- categ_comb %>% 
+  mutate(decade = floor(year_published/10)*10) %>% 
+  group_by(decade, cat) %>% 
+  mutate(cat_avg_rating = mean(average_rating)) %>% 
+  mutate(categ_count = n())
+
+categ_comb$cat_avg_rating <- round(categ_comb$cat_avg_rating, 2)
+
+categ_2016 <- categ_comb %>% 
   filter(year_published == 2016) %>% 
-  group_by(categ1) %>% 
-  mutate(mean_rating = mean(average_rating))
-
-topcat <- data.frame(unique(categ_iso$categ1))
-
-topcat <- topcat %>% 
-  rename(categ1 = unique.categ_iso.categ1.)
-
-categ_iso1 <- categ_iso %>% 
-  select(categ1, mean_rating)
-
-topcat <- topcat %>% 
-  left_join(categ_iso1, by = "categ1")
-
-topcat <- distinct(topcat)
-
-topcat <- topcat %>% 
-  arrange(desc(mean_rating)) %>% 
+  arrange(desc(cat_avg_rating)) %>% 
+  select(-average_rating) %>% 
+  group_by(cat) %>% 
+  mutate(categ_count2016 = n()) %>% 
+  distinct() %>% 
   head(10)
+```
 
-catp1 <- topcat %>% 
-  ggplot(aes(reorder(categ1, -mean_rating), mean_rating, fill = categ1, label = categ1)) +
+```{r cat-plot, fig.cap= 'Top 10 categories of board games in 2016. The length of the bars parallel to the x-axis represent average rating of all categories, with each of the the top 10 categories mapped on the y-axis. Numbers on the right of bars represent games of those categories launced in 2016. Clearly observable that war type games are most liked, with 43 games in Wargame categories in 2016 alone.'}
+catp1 <- categ_2016 %>% 
+  ggplot(aes(cat_avg_rating, reorder(cat, cat_avg_rating), fill = cat_avg_rating, label = categ_count2016)) +
   geom_col() +
-  geom_text(size = 2.5, angle = 90, position = position_stack(vjust = 1.09)) +
-  theme(axis.text.x = element_blank(),
-        legend.position = "none") +
-  xlab("Board game category") +
-  ylab("Average rating") +
-  ggtitle("Top 10 Ranked Board Game categories in 2016")
+  geom_text(size = 4, position = position_stack(vjust = 1.09)) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  xlab("Average rating") +
+  ylab("Board game category") +
+  ggtitle("Top 10 Ranked Board Game Categories in 2016") +
+  theme_bw() +
+  theme(legend.position = "none")
 
 ggplotly(catp1)
 ```
 
+* Numbers on the right hand side of bars represent the number of games of that category that were published in 2016. This gives us a better understanding of the ratings as some will be spread out over a number of games, even if they are relatively lower in ranking, like War Games and Miniatures categories. They have 43 and 29 games published respectively in 2016, and yet have maintained a top 10 ranking of 6 and 8 respectively. Vitenam War category has just one game published but was rated quite highly (7.75). American Indian Wars category had 2 games published in 2016, and was the highest rated category with an average rating of 7.85
+
 * It is clear from the above graph that American Indian Wars category has the highest rating in the most recent yearly data available (2016). 
 
-* An interesting point to note about human behavior and how we like to pass our free time, when we see that  **6 out of those top 10 categories of board games are war related.** 
+* An interesting point to note about human behavior and how we like to pass our free time, when we see that the **top 7 out of those top 10 categories of board games are war related.** 
 
-* For anyone reading this paper in a relevant field, it would be an interesting psychological experiment to understand why we, as a species, are so drawn to war-like scenarios even during our innocent board game time. 
+* For anyone reading this paper in a relevant field, it would be an interesting psychological experiment to understand why we, as a species, are so drawn to war-like scenarios even during our innocent board game time.
+
+* Additionally, a new game developer could draw an insight from this chart that war based games are the popular, when brainstorming ideas for new games to launch.
+
+Let us now consider, how these categories in figure \@ref(fig:cat-plot) above have evolved over time. We can take a look at a timeline of all these board games and see if we can observe any trends in the likability or acceptance of board game categories.
 
 
+```{r catplot-time, fig.height = 8, fig.width=11.5, fig.asp=.40, fig.cap= 'Current top 10 board games rating over the last 50+ years. Decade and Rating mapped on x and y axis resepctively. Numbers on graph represent number of games published each decade in that category. Each facet represents a game category in 2016 top 10. A steep rise in likability since last decade is visible for all games, with a dip for nearly all categories in the 1980s. Important to consider that number of games in 2010s are only till 2016.'}
 
+catp2 <- categ_comb %>%
+  filter(cat %in% categ_2016$cat) %>% 
+  ggplot(aes(decade, cat_avg_rating, label = categ_count)) +
+  geom_line(aes(color = cat)) +
+  geom_text(size = 2.5, nudge_y = 0.2) +
+  facet_wrap(~cat, nrow = 2) +
+  xlab("Decade") +
+  ylab("Average rating") +
+  ggtitle("Category Ratings Change Over Last 6 Decades") +
+  theme_bw() +
+  theme(legend.position = "none")
+  
+
+ggplotly(catp2)
+```
+
+* An initial look at the figure \@ref(fig:catplot-time) above indicates that nearly all these 2016 top 10 categories have undergone significant rise in ratings in the last decade.
+
+* Nearly all war themed games (except Modern Warfare) had undergone a drop in ratings in the 1980s, and then sharply rose and kept rising till 2016. World War did not see a drop in ratings in the 80s, but had it's growth plateaued as well.
+
+* Vietnam war (the actual war) lasted 2 decades from 1950s to the 70s. The first game introduced in this category had a rating just above 7 around the time the war ended. Ratings droppped as with most war games in the 1980s, and then rose again to be the second highest rated category as of 2016.
+
+* When we look at the number of games manufactured for each category and each decade, it is of note that the top rated category in 2016 -  American Idian wars, had only 1 game in the 1990s, when it dropped to it's lowest point. This was followed by 2 and then 6 games in the following decades, when it rose to the top of the rankings.
+
+* There were 545 games of the Wargame category published in 2000s, followed by a drop in numbers to 424 in 2010s, but ratings rose to nearly 7.5. 
 
 # References
 
