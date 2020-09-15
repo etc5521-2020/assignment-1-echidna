@@ -27,6 +27,8 @@ library(gridExtra)
 library(broom)
 library(bookdown)
 library(knitr)
+library(ggrepel)
+library(treemap)
 ```
 
 ```{r ReadData, include = FALSE}
@@ -57,6 +59,7 @@ Secondary Questions:
 1. What are the top 10 ranked board games?
 2. How do variables like min/max playtime, min/max players, or min_age affect the average rating?
 3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?
+4. Which kind of mechanic is most popular? How do different kinds of mechanic performed?
 
 The variables included in the data are as follows:
 
@@ -147,7 +150,7 @@ vis_miss(board_games) + ggtitle("Distribution of Missing Values")
 
 ## Questions of Interest
 
-**1. What are the top 10 ranked board games?**
+### **What are the top 10 ranked board games?**
 
 ```{r Top10barchart, fig.cap='Top 10 ranked board games', fig.align = "center", fig.height=3, fig.width=6}
 Q1 <- board_games %>%
@@ -175,7 +178,7 @@ Q1 %>%
 ```
 
 
-**2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?**
+### **How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?**
 
 ```{r Top50Create}
 board_games_top50 <- board_games %>%
@@ -190,6 +193,7 @@ board_games_top50 <- board_games %>%
                 year_published,
                 designer,
                 publisher,
+                mechanic,
                 average_rating,
                 users_rated) %>%
   arrange(desc(average_rating)) %>%
@@ -371,11 +375,12 @@ bpplaytime <- board_games_top50_longer %>% ggplot(aes(x = playtime, y = playtime
                outlier.color = "darkorange",
                outlier.size = 2) +
   ylab("Playtime") +
-  xlab("")
+  xlab("") +
+  scale_y_continuous(limits = c(1,1200))
 ```
 
 
-```{r BoxplotCompare, fig.cap='Summarizing all observations as Violinplots'}
+```{r ViolinplotCompare, fig.cap='Summarizing all observations as Violinplots'}
 grid.arrange(bpplayers, bpplaytime)
 ```
 
@@ -417,22 +422,24 @@ grid.arrange(bpminage, e)
   + Players of **age between 10-15 years** mostly play the top 50 games.
   + We can observe from the trend that games are more popular among **age group of 7-13 year olds**
   
-**3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?**
+### **Which game designer was most successful in producing popular games? Which publisher published the most popular games?**
 
 ```{r Designers, fig.cap='Top 10 Game Designers'}
 top10 <- board_games_top50 %>% arrange(desc(average_rating)) %>% head(10)
 
 top10 %>% 
-  ggplot(aes(x = reorder(designer,average_rating), y = average_rating)) +
-  geom_segment( aes(xend=designer, yend=0)) +
+  ggplot(aes(x = reorder(designer,average_rating), 
+             y = average_rating, 
+             label = year_published)) +
   geom_point(size=4, color="orange") +
+  geom_hline(yintercept = mean(top10$average_rating), color='black') +
+  geom_text_repel() +
   theme_bw() +
   coord_flip() +
-  xlab("Designer") + ylab("Average Rating") + ggtitle("Top 10 Game Designers") %>%
-  plotly()
+  xlab("Designer") + ylab("Average Rating") + ggtitle("Top 10 Game Designers")
 ```
 
-* The above scatter-plot \@ref(fig:Designers) consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the **mean average rating is around 8.82** with 5 observations on either side of the line.
+* The above plot \@ref(fig:Designers) consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the **mean average rating is around 8.82** with 5 observations on either side of the line.
 
 * **Philippe Keyaerts** has the **highest rated game** at around 9+ followed by **Vlaada Chvatil** around 8.93 with all the other designers falling around the mean value. The **lesser rated designer** in the top 10 is **Rob Daviau, Matt Leacock**. We should note that Dean Essig has two games in the top 10. 
 
@@ -442,13 +449,15 @@ top10 %>%
 top7 <- top10 %>% head(7)
   
 top7 %>% 
-  ggplot(aes(x = reorder(publisher,average_rating), y = average_rating)) +
-  geom_segment(aes(xend=publisher, yend=0)) +
+  ggplot(aes(x = reorder(as.character(publisher),average_rating), 
+             y = average_rating, 
+             label = year_published)) +
   geom_point(size=4, color="orange") +
+  geom_hline(yintercept = mean(top7$average_rating), color='black') +
+  geom_text_repel() +
   theme_bw() +
   coord_flip() +
-  xlab("Publisher") + ylab("Average Rating") + ggtitle("Top 7 Game Publishers") %>%
-  plotly()
+  xlab("Publisher") + ylab("Average Rating") + ggtitle("Top 7 Game Publishers")
 ```
 
 * The above scatter-plot \@ref(fig:Publishers) consists of average rating on x-axis and publisher on y-axis.
@@ -458,6 +467,30 @@ top7 %>%
 * The **top rated game was published by Days of Wonder** and the **lesser rated game** in the top 7 was published by **Compass Games**. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
 
 **Bonus Insight -** An interesting takeaway from the above two plots is that the best and **top rated board games were launched between 2010-2016** with most of the top rated games launched in the year **2015.**
+
+### **Which kind of mechanic is most popular? How do different kinds of mechanic performed?**
+
+```{r MechanicFreq}
+mechanic_freq <- board_games %>%
+  mutate(mechanic = as.factor(mechanic)) %>%
+  group_by(mechanic)%>%
+  summarise(freq = n(), average_rating = mean(average_rating)) %>%
+  na.omit() %>%
+  arrange(desc(freq)) %>%
+  head(10)
+```
+
+```{r MechanicTreemap, fig.cap='Top 10 Mechanic with rating'}
+treemap(mechanic_freq, index = "mechanic",vSize = "freq", vColor="average_rating",
+        type="manual", palette="RdYlBu",
+        title = "Frequence of Mechanic Type",
+        title.legend = "Average Rating") 
+```
+* The treemap \@ref(fig:MechanicTreemap) shows the top 10 frequent mechanic type, the size of rectangles corresponding to the frequency of mechanic.
+
+* **The most popular mechanic is Hex-and-Counter** with a 6.8 average rating. Among the top 10 mechanic, **Dice Rolling,Hex-and-Counter,Simulation rated highest.** The lesser rated mechanic in the top 10 is **4 Roll / Spin and Move**.
+
+* In the top 10 blue rectangles, that is, machines with an average score higher than 6.6, all contain **Hex-and-Counter**.
 
 # References
 
@@ -495,3 +528,9 @@ http://dx.doi.org/10.21105/joss.00355>.
   
 * Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R
   package version 1.29.
+  
+* Martijn Tennekes (2017). treemap: Treemap Visualization. R package version 2.4-2.
+  https://CRAN.R-project.org/package=treemap
+  
+* Kamil Slowikowski (2020). ggrepel: Automatically Position Non-Overlapping Text Labels with
+  'ggplot2'. R package version 0.8.2. https://CRAN.R-project.org/package=ggrepel
