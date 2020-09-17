@@ -5,6 +5,8 @@ team: [Echidna]
 author:
   - [Ruimin Lin]
   - [Rahul Bharadwaj]
+  - [Ketan Kabu]
+  - [Yezi He]
 date: "`r Sys.Date()`"
 output:
   bookdown::html_document2
@@ -27,7 +29,8 @@ library(gridExtra)
 library(broom)
 library(bookdown)
 library(knitr)
-library(dplyr)
+library(ggrepel)
+library(treemap)
 ```
 
 ```{r ReadData, include = FALSE}
@@ -58,6 +61,7 @@ Secondary Questions:
 1. What are the top 10 ranked board games?
 2. How do variables like min/max playtime, min/max players, or min_age affect the average rating?
 3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?
+4. Which kind of mechanic is most popular? How do different kinds of mechanic performed?
 
 The variables included in the data are as follows:
 
@@ -148,7 +152,7 @@ vis_miss(board_games) + ggtitle("Distribution of Missing Values")
 
 ## Questions of Interest
 
-**1. What are the top 10 ranked board games?**
+### **What are the top 10 ranked board games?**
 
 ```{r Top10barchart, fig.cap='Top 10 ranked board games', fig.align = "center", fig.height=3, fig.width=6}
 Q1 <- board_games %>%
@@ -156,7 +160,7 @@ Q1 <- board_games %>%
   head(10)
 
 Q1 %>% 
-  ggplot(aes(name, average_rating, fill = name, label = name)) +
+  ggplot(aes(reorder(name,average_rating), average_rating, fill = name, label = name)) +
   geom_col() +
   geom_text(size = 3, angle = 90, position = position_stack(vjust = 0.5)) +
   theme(axis.text.x = element_blank(),
@@ -176,7 +180,7 @@ Q1 %>%
 ```
 
 
-**2. How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?**
+### **How do variables like min/max playtime, min/max players, or min_age affect the average rating in these top-ranked board games?**
 
 ```{r Top50Create}
 board_games_top50 <- board_games %>%
@@ -191,6 +195,7 @@ board_games_top50 <- board_games %>%
                 year_published,
                 designer,
                 publisher,
+                mechanic,
                 average_rating,
                 users_rated) %>%
   arrange(desc(average_rating)) %>%
@@ -240,12 +245,6 @@ tibble(lower_range = lo1,
        upper_range = up1)
 ```
 
-```{r BoxPlotMaxPlaytime}
-bpmaxplaytime <- board_games_top50 %>% 
-  ggplot() +
-  geom_boxplot(mapping = aes(y= max_playtime), fill = "white") +
-  geom_hline(yintercept = median(board_games_top50$max_playtime), color='red')
-```
 
 ```{r MaxPlaytimePlot, fig.cap = 'Adjusted Maximum Playtime', fig.align = "center", fig.height=3, fig.width=6}
 p1a <- board_games_top50 %>%
@@ -277,11 +276,7 @@ tibble(lower_range = lo2,
        upper_range = up2)
 ```
 
-```{r BoxPlotMinPlaytime}
-bpminplaytime <- board_games_top50 %>% ggplot() +
-  geom_boxplot(mapping = aes(y= min_playtime), fill = "white") +
-  geom_hline(yintercept = median(board_games_top50$min_playtime), color='red')
-```
+
 
 ```{r MinPlaytimePlot, fig.cap='Minimum Playtime Plot', fig.align = "center", fig.height=3, fig.width=6}
 p2 <- board_games_top50 %>%
@@ -299,11 +294,7 @@ p2
 
 * We have implemented the same method to omit the outliers as done previously, the graph demonstrates that in top-50 ranked board games, most of them have a minimum playtime less than 100 minutes.
 
-```{r BoxPlotMinPlayers}
-bpminplayers <- board_games_top50 %>% ggplot() +
-  geom_boxplot(mapping = aes(y= min_players), fill = "white") +
-  geom_hline(yintercept = median(board_games_top50$min_players), color='blue')
-```
+
 
 ```{r MinPlayersPlot, fig.cap = "Relationship between Minimum Players and Average Rating", fig.align = "center", fig.height=3, fig.width=6}
 p3 <- board_games_top50 %>%
@@ -319,11 +310,6 @@ p3
 ```
 * In the scatterplot for average rating against minimum players, we observed that most top 50 board games have at least 2 players.
 
-```{r BoxPlotMaxPlayers}
-bpmaxplayers <- board_games_top50 %>% ggplot() +
-  geom_boxplot(mapping = aes(y= max_players), fill = "white") +
-  geom_hline(yintercept = median(board_games_top50$max_players), color='blue')
-```
 
 ```{r MaxPlayersPlot, fig.cap = "Relationship between Maximum Players and Average Rating", fig.align = "center", fig.height=3, fig.width=6}
 p4 <- board_games_top50 %>%
@@ -344,7 +330,6 @@ p4
 * The figure \@ref(fig:MinPlayersPlot) and \@ref(fig:MaxPlayersPlot) indicates that majority of high rating board games have set the players to between 2 and 4/5 players. The limitation of players suggest that people tend to play board games that fulfills their sense of participation, for example, a board game of 8 players may not be as attractive as a board game of 2 players, because a 2-player game has little downtime than a 8-player game, and satisfies each players' sense of participation in the board game.
 
 * On the other hand, it is easier to gather a group of 2-4 people interesting in play board games at leisure time than gathering a group of 8 or more people.
-
 
 ```{r BoxPlotMinAge}
 bpminage <- board_games_top50 %>% ggplot() +
@@ -367,9 +352,38 @@ p5
 
 * In the scatterplot for average rating against minimum age of players, we observed that the minimum age set by majority of board games are between 10 - 15.
 
+```{r BoardGamesTop50Longer}
+board_games_top50_longer <- board_games_top50 %>%
+  pivot_longer(c(max_players, min_players), names_to = "player", values_to = "player_number") %>%
+  pivot_longer(c(max_playtime, min_playtime), names_to = "playtime", values_to = "playtime_number")
+```
 
-```{r BoxplotCompare, fig.cap='Summarizing all observations as Boxplots'}
-grid.arrange(bpminplayers, bpmaxplayers, bpminplaytime, bpmaxplaytime)
+```{r ViolinPlotPlayers}
+bpplayers <- board_games_top50_longer %>% ggplot(aes(x = player, y = player_number)) +
+  geom_violin(fill = "cornflowerblue", alpha = 0.5) +
+  geom_boxplot(width = .1, 
+               fill = "darkorange",
+               outlier.color = "darkorange",
+               outlier.size = 2) +
+  ylab("Players") +
+  xlab("")
+```
+
+```{r ViolinPlotPlaytime}
+bpplaytime <- board_games_top50_longer %>% ggplot(aes(x = playtime, y = playtime_number)) +
+  geom_violin(fill = "cornflowerblue", alpha = 0.5) +
+  geom_boxplot(width = .1, 
+               fill = "darkorange",
+               outlier.color = "darkorange",
+               outlier.size = 2) +
+  ylab("Playtime") +
+  xlab("") +
+  scale_y_continuous(limits = c(1,1200))
+```
+
+
+```{r ViolinplotCompare, fig.cap='Summarizing all observations as Violinplots'}
+grid.arrange(bpplayers, bpplaytime)
 ```
 
 * All the insights for the top 50 popular games are summarized in the boxplots above as follows:
@@ -409,43 +423,10 @@ grid.arrange(bpminage, e)
 
   + Players of **age between 10-15 years** mostly play the top 50 games.
   + We can observe from the trend that games are more popular among **age group of 7-13 year olds**
-  
-**3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?**
 
-```{r Designers, fig.cap='Top 10 Game Designers'}
-top10 <- board_games_top50 %>% arrange(desc(average_rating)) %>% head(10)
 
-top10 %>% ggplot(aes(x = average_rating, y = designer, color = designer)) +
-  geom_point() + theme(axis.text.y = element_blank()) +
-  geom_text(label = top10$year_published, vjust = 0, nudge_y = 0.15) +
-  geom_vline(xintercept = mean(top10$average_rating)) +
-  xlab("Average Rating") + ylab("Designer") + ggtitle("Top 10 Game Designers")
-```
 
-* The above scatter-plot \@ref(fig:Designers) consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the **mean average rating is around 8.82** with 5 observations on either side of the line.
-
-* **Philippe Keyaerts** has the **highest rated game** at around 9+ followed by **Vlaada Chvatil** around 8.93 with all the other designers falling around the mean value. The **lesser rated designer** in the top 10 is **Rob Daviau, Matt Leacock**. We should note that Dean Essig has two games in the top 10. 
-
-* Who among these is the best is still a debatable question. Some might say it is Dean, while some might consider Philippe. Nevertheless, all of the designers in the plot are among the top 10 and have produced the most popular games. 
-
-```{r Publishers, fig.cap='Top 7 Game Publishers'}
-top7 <- top10 %>% head(7)
-  
-top7 %>% ggplot(aes(x = average_rating, y = publisher, color = publisher)) +
-  geom_point() + theme(axis.text.y = element_blank()) +
-  geom_text(label = top7$year_published, vjust = 0, nudge_y = 0.15) +
-  xlab("Average Rating") + ylab("Publisher") + ggtitle("Top 7 Game Publishers")
-```
-
-* The above scatter-plot \@ref(fig:Publishers) consists of average rating on x-axis and publisher on y-axis.
-
-* The first thing that strikes from looking at this plot is that **Multi-Man Publishing has 3 among the top 7 rated board games** which hints that they are one of the best publishers.
-
-* The **top rated game was published by Days of Wonder** and the **lesser rated game** in the top 7 was published by **Compass Games**. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
-
-**Bonus Insight -** An interesting takeaway from the above two plots is that the best and **top rated board games were launched between 2010-2016** with most of the top rated games launched in the year **2015.**
-
-**4. How have the current best categories evolved over time, with respect to average rating?**
+### **How have the current best categories evolved over time, with respect to average rating?**
 
 Important note - Majority of the games are classified into multiple categories at once. For example, the game Top Trumps has about 14 categories it has been classified under. 
 Therefore, the calculation of number of games under each category will be an overlapping process, as one game would be classsified under various categories. If one would calculate the percentage of games under all category, it will be higher than 100%.
@@ -610,7 +591,54 @@ ggplotly(catp2)
 
 * When we look at the number of games manufactured for each category and each decade, it is of note that the top rated category in 2016 -  American Idian wars, had only 1 game in the 1990s, when it dropped to it's lowest point. This was followed by 2 and then 6 games in the following decades, when it rose to the top of the rankings.
 
-* There were 545 games of the Wargame category published in 2000s, followed by a drop in numbers to 424 in 2010s, but ratings rose to nearly 7.5. 
+* There were 545 games of the Wargame category published in 2000s, followed by a drop in numbers to 424 in 2010s, but ratings rose to nearly 7.5.
+  
+### **Which game designer was most successful in producing popular games? Which publisher published the most popular games?**
+
+```{r Designers, fig.cap='Top 10 Game Designers'}
+top10 <- board_games_top50 %>% arrange(desc(average_rating)) %>% head(10)
+
+top10 %>% 
+  ggplot(aes(x = reorder(designer,average_rating), 
+             y = average_rating, 
+             label = year_published)) +
+  geom_point(size=4, color="orange") +
+  geom_hline(yintercept = mean(top10$average_rating), color='black') +
+  geom_text_repel() +
+  theme_bw() +
+  coord_flip() +
+  xlab("Designer") + ylab("Average Rating") + ggtitle("Top 10 Game Designers")
+```
+
+* The above plot \@ref(fig:Designers) consists of average rating on x-axis and designer on y-axis. The black x-intercept represents the mean value of average ratings of the top 10 designers. The plot conveys that the **mean average rating is around 8.82** with 5 observations on either side of the line.
+
+* **Philippe Keyaerts** has the **highest rated game** at around 9+ followed by **Vlaada Chvatil** around 8.93 with all the other designers falling around the mean value. The **lesser rated designer** in the top 10 is **Rob Daviau, Matt Leacock**. We should note that Dean Essig has two games in the top 10. 
+
+* Who among these is the best is still a debatable question. Some might say it is Dean, while some might consider Philippe. Nevertheless, all of the designers in the plot are among the top 10 and have produced the most popular games. 
+
+```{r Publishers, fig.cap='Top 7 Game Publishers'}
+top7 <- top10 %>% head(7)
+  
+top7 %>% 
+  ggplot(aes(x = reorder(as.character(publisher),average_rating), 
+             y = average_rating, 
+             label = year_published)) +
+  geom_point(size=4, color="orange") +
+  geom_hline(yintercept = mean(top7$average_rating), color='black') +
+  geom_text_repel() +
+  theme_bw() +
+  coord_flip() +
+  xlab("Publisher") + ylab("Average Rating") + ggtitle("Top 7 Game Publishers")
+```
+
+* The above scatter-plot \@ref(fig:Publishers) consists of average rating on x-axis and publisher on y-axis.
+
+* The first thing that strikes from looking at this plot is that **Multi-Man Publishing has 3 among the top 7 rated board games** which hints that they are one of the best publishers.
+
+* The **top rated game was published by Days of Wonder** and the **lesser rated game** in the top 7 was published by **Compass Games**. Again, it is debatable as to who is best but the publishers in the above plot have published some of the finest board games.
+
+**Bonus Insight -** An interesting takeaway from the above two plots is that the best and **top rated board games were launched between 2010-2016** with most of the top rated games launched in the year **2015.**
+
 
 # References
 
@@ -648,3 +676,10 @@ http://dx.doi.org/10.21105/joss.00355>.
   
 * Yihui Xie (2020). knitr: A General-Purpose Package for Dynamic Report Generation in R. R
   package version 1.29.
+  
+* Martijn Tennekes (2017). treemap: Treemap Visualization. R package version 2.4-2.
+  https://CRAN.R-project.org/package=treemap
+  
+* Kamil Slowikowski (2020). ggrepel: Automatically Position Non-Overlapping Text Labels with
+  'ggplot2'. R package version 0.8.2. https://CRAN.R-project.org/package=ggrepel
+
