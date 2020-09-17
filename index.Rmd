@@ -65,10 +65,6 @@ Secondary Questions:
 
 The variables included in the data are as follows:
 
-```{r glimpseData}
-glimpse(board_games)
-```
-The explanation of variables and variable types are provided to enable a better understanding of the variables in board games data set.
 
 * game_id: ID of a particular game, the game_id should be a character vector(categorical) instead of a double vector mentioned in the table above.
 
@@ -172,11 +168,18 @@ Q1 %>%
 ```
 
 ```{r Top10table}
+Q1$average_rating <- round(Q1$average_rating, 2)
+
 Q1 %>%
   dplyr::select(name, average_rating, max_playtime, 
                 min_playtime, max_players, min_players) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+  kable(col.names = c("Game","Average rating",
+                              "Max playtime",
+                              "Min playtime",
+                              "Max players",
+                              "Min players")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = FALSE)
 ```
 
 
@@ -549,7 +552,7 @@ catp1 <- categ_2016 %>%
   theme_bw() +
   theme(legend.position = "none")
 
-ggplotly(catp1)
+catp1
 ```
 
 * Numbers on the right hand side of bars represent the number of games of that category that were published in 2016. This gives us a better understanding of the ratings as some will be spread out over a number of games, even if they are relatively lower in ranking, like War Games and Miniatures categories. They have 43 and 29 games published respectively in 2016, and yet have maintained a top 10 ranking of 6 and 8 respectively. Vitenam War category has just one game published but was rated quite highly (7.75). American Indian Wars category had 2 games published in 2016, and was the highest rated category with an average rating of 7.85
@@ -580,7 +583,7 @@ catp2 <- categ_comb %>%
   theme(legend.position = "none")
   
 
-ggplotly(catp2)
+catp2
 ```
 
 * An initial look at the figure \@ref(fig:catplot-time) above indicates that nearly all these 2016 top 10 categories have undergone significant rise in ratings in the last decade.
