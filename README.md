@@ -6,6 +6,8 @@ Team members:
 
 * Ruimin Lin
 * Rahul Bharadwaj
+* Ketan Kabu
+* Yezi He
 
 # Steps
 
