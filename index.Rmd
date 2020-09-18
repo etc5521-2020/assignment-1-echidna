@@ -642,6 +642,34 @@ top7 %>%
 
 **Bonus Insight -** An interesting takeaway from the above two plots is that the best and **top rated board games were launched between 2010-2016** with most of the top rated games launched in the year **2015.**
 
+### **Which kind of mechanic is most popular? How do different kinds of mechanic performed?**
+
+```{r MechanicFreq}
+mechanic_freq <- board_games %>%
+  mutate(mechanic = as.factor(mechanic)) %>%
+  group_by(mechanic)%>%
+  summarise(freq = n(), average_rating = mean(average_rating)) %>%
+  na.omit() %>%
+  arrange(desc(freq)) %>%
+  head(10)
+```
+
+```{r MechanicTreemap, fig.cap='Top 10 Mechanic with rating'}
+treemap(mechanic_freq, index = "mechanic",vSize = "freq", vColor="average_rating",
+        type="manual", palette="RdYlBu",
+        title = "Frequence of Mechanic Type",
+        title.legend = "Average Rating") 
+```
+* The treemap \@ref(fig:MechanicTreemap) shows the top 10 frequent mechanic type, the size of rectangles corresponding to the frequency of mechanic.
+
+* **The most popular mechanic is Hex-and-Counter** with a 6.8 average rating. Among the top 10 mechanic, **Dice Rolling,Hex-and-Counter,Simulation rated highest.** The lesser rated mechanic in the top 10 is **4 Roll / Spin and Move**.
+
+* In the top 10 blue rectangles, that is, machines with an average score higher than 6.6, all contain **Hex-and-Counter**.
+
+
+# Conclusion
+
+From the above analysis, we can see that the top ranked board games have the following common characteristics. A maximum of 4 players and minimum of 2 players is most popular in the top 50 games. The maximum and minimum playtime seem to be almost close and range between 60-150 minutes for top 50 games. The minimum age set by majority of board games are between 10 - 15. American Indian Wars category has the highest rating in the most recent yearly data available. Philippe Keyaerts has the highest rated game and Multi-Man Publishing is one of the best publishers. Hex-and-Counter is the most popular mechanic.
 
 # References
 
