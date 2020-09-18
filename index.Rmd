@@ -9,7 +9,11 @@ author:
   - [Yezi He]
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2
+  bookdown::html_document2:
+    theme: cerulean
+    toc: true
+    toc_float: true
+    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
@@ -60,8 +64,10 @@ Secondary Questions:
 
 1. What are the top 10 ranked board games?
 2. How do variables like min/max playtime, min/max players, or min_age affect the average rating?
-3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?
-4. Which kind of mechanic is most popular? How do different kinds of mechanic performed?
+3. How have the current best categories of board games evolved over time, in the last few decades, with respect to average rating?
+4. Which game designer was most successful in producing popular games? Which publisher published the most popular games?
+5. Which kind of mechanic is most popular? How do different kinds of mechanic performed?
+
 
 The variables included in the data are as follows:
 
@@ -665,7 +671,6 @@ treemap(mechanic_freq, index = "mechanic",vSize = "freq", vColor="average_rating
 * **The most popular mechanic is Hex-and-Counter** with a 6.8 average rating. Among the top 10 mechanic, **Dice Rolling,Hex-and-Counter,Simulation rated highest.** The lesser rated mechanic in the top 10 is **4 Roll / Spin and Move**.
 
 * In the top 10 blue rectangles, that is, machines with an average score higher than 6.6, all contain **Hex-and-Counter**.
-
 
 # Conclusion
 
