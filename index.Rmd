@@ -143,6 +143,7 @@ vis_miss(board_games) + ggtitle("Distribution of Missing Values")
   + `compilation` - 96.11% missing
   + `expansion` - 73.87% missing
   + `family` - 26.66% missing
+  + `mechanic` - 9.02% missing
   
 * This is a limitation of the dataset and we frame our questions keeping this in mind.
 
