@@ -62,6 +62,7 @@ Secondary Questions:
 2. How do variables like min/max playtime, min/max players, or min_age affect the average rating?
 3. Which game designer was most successful in producing popular games? Which publisher published the most popular games?
 4. Which kind of mechanic is most popular? How do different kinds of mechanic performed?
+5. How have the current best categories of board games evolved over time, in the last few decades, with respect to average rating?
 
 The variables included in the data are as follows:
 
